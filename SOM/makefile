@@ -10,5 +10,8 @@ exe: driver.o
 driver.o : driver.cpp semiorder.h
 	g++ -c -g driver.cpp -fopenmp
 
+inputmat:
+	python makeSOM.py > input
+
 clean:
 	rm exe *.o

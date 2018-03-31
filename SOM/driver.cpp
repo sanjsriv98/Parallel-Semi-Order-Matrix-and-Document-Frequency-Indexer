@@ -43,8 +43,8 @@ int main()
 #pragma omp parallel for shared(answerflg, indexflg, setflg, answer)
 		for (i = 0; i < size; i++)
 		{
-			int id1 = omp_get_thread_num();
-			printf("TID:%d\n", id1);
+			// int id1 = omp_get_thread_num();
+			// printf("TID:%d\n", id1);
 			search(mat, arr, key, i);
 		}
 		size = 3 * size;
@@ -56,6 +56,7 @@ int main()
 	if (answerflg == 1)
 	{
 		printf("%d %d , %d\n", answer->x, answer->y, size);
+		printf("%d\n", mat[answer->x][answer->y]);
 	}
 	else
 	{
@@ -87,7 +88,7 @@ void search(int **mat, SubMatrix **arr, int key, int index)
 	{
 		answerflg = 1;
 		answer = middle;
-		printf("%d %d\n", middle->x, middle->y);
+		// printf("%d %d\n", middle->x, middle->y);
 		return;
 	}
 	else if (corners->fromx == corners->tox && corners->fromy == corners->toy)
