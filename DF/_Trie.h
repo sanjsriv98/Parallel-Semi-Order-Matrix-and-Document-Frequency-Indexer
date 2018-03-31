@@ -1,19 +1,29 @@
 // SAMIP JASANI 2015A7PS0127P
-
+// SANJAY 2015A7PS0102P
 #define ALPHABET_SIZE (26)
-#include "lexer.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#include <ctype.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <unistd.h>
+#include <errno.h>
 #include <stdbool.h>
 
-struct TrieNode
+typedef struct TrieNode
 {
     struct TrieNode *children[ALPHABET_SIZE];
-    enum tokenType type;
+    // enum tokenType type;
     // isEndOfWord is true if the node represents
     // end of a word
     bool isEndOfWord;
-};
+    int count;
+}TrieNode;
 
-struct TrieNode *getNode(void);
-void insert(struct TrieNode *root, const char *key, int type);
-int search(struct TrieNode *root, const char *key);
-int searchforgrammer(struct TrieNode *root, const char *key);
+typedef TrieNode* trieNode;
+
+trieNode getNode(void);
+void insert(trieNode root, const char *key, int type);
+int search(trieNode root, const char *key);
