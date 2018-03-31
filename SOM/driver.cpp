@@ -24,7 +24,8 @@ int main()
 			scanf(" %d", &mat[i][j]);
 		}
 	}
-	int key;
+	printf("READING COMPLETE\n");
+	int key; // = mat[99][99];
 	scanf("%d", &key);
 	SubMatrix corners = (SubMatrix)calloc(1, sizeof(submatrix));
 	corners->tox = x - 1;
@@ -45,6 +46,10 @@ int main()
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
+			if (!arr[indexflg][i])
+			{
+				continue;
+			}
 			search(mat, arr, key, i);
 		}
 		size = 3 * size;
@@ -55,7 +60,7 @@ int main()
 	free(arr[0]);
 	if (answerflg == 1)
 	{
-		printf("%d %d , %d\n", answer->x, answer->y, size);
+		printf("%d %d , %d\n", answer->x, answer->y, size / 3);
 		printf("%d\n", mat[answer->x][answer->y]);
 	}
 	else
@@ -63,16 +68,18 @@ int main()
 		printf("FAILED %d\n", size);
 	}
 	free(corners);
+	for (i = 0; i < x; i++)
+	{
+		free(mat[i]);
+	}
+	free(mat);
 	// }
 	return 0;
 }
 
 void search(int **mat, SubMatrix **arr, int key, int index)
 {
-	if (!arr[indexflg][index])
-	{
-		return;
-	}
+
 	SubMatrix corners = arr[indexflg][index];
 	Pos middle = (Pos)malloc(sizeof(pos));
 	// Pos answer;
