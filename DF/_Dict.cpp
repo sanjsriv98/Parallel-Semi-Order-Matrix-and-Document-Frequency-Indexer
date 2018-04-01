@@ -21,12 +21,56 @@ void fill_global(char *token)
 		temp.count = 1;
 		temp.index = -1;
 		global_dict[token] = temp;
+		if (temp.count > conf)
+		{
+			// LOCK
+			if (temp.count > global_heap->arr[0].count)
+			{
+				global_dict[global_heap->arr[0].word].index = -1;
+				global_dict[token].index = 0;
+				global_heap->arr[0].count = temp.count;
+				global_heap->arr[0].word = global_dict.find(token)->first;
+				minHeapify(global_heap, global_heap->size - 1, 0);
+			}
+			// UNLOCK
+			conf = global_heap->arr[0].count;
+		}
 		// cout << "not found" << '\n';
 		// fill_global(token);
+		// global_heap->size = 0;
 	}
 	else
 	{
 		global_dict[token].count++;
+		if (global_dict[token].index == -1)
+		{
+			if (global_dict[token].count > conf)
+			{
+				// LOCK
+				if (global_dict[token].count > global_heap->arr[0].count)
+				{
+					global_dict[global_heap->arr[0].word].index = -1;
+					global_dict[token].index = 0;
+					global_heap->arr[0].count = global_dict[token].count;
+					global_heap->arr[0].word = global_dict.find(token)->first;
+					minHeapify(global_heap, global_heap->size - 1, 0);
+				}
+				// UNLOCK
+				conf = global_heap->arr[0].count;
+			}
+		}
+		else
+		{
+			// LOCK
+			int index = global_dict[token].index;
+			global_heap->arr[index].count++;
+			minHeapify(global_heap, global_heap->size - 1, index);
+			// UNLOCK
+			if (index == 0)
+			{
+				conf = global_heap->arr[0].count;
+			}
+		}
 	}
 
 	// cout << token << '\n';
