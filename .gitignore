@@ -2,6 +2,7 @@ input*
 exe
 DF-2
 DF_hash
+out*
 
 # Prerequisites
 *.d
