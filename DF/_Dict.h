@@ -1,3 +1,4 @@
+#define _DICT_H 500
 #include <iostream>
 #include <string>
 #include <map>
@@ -14,17 +15,18 @@
 // #include <stdbool.h>
 using namespace std;
 
-
-typedef struct countindex{
+typedef struct countindex
+{
 	int count;
 	int index;
-}countindex;
+} countindex;
 
-typedef countindex* countIndex;
+typedef countindex *countIndex;
+// #ifndef _DICT_H
+extern map<string, countindex> global_dict;
+// map<string, countindex> global_dict;
+// #endif
 
-map<string,countindex> global_dict;
+void fill_dict(const char *docName);
 
-
-void fill_dict(char* docName);
-
-void fill_global(char* token);
+void fill_global(char *token);
