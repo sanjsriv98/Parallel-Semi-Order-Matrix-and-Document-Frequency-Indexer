@@ -41,16 +41,27 @@ int main()
 		setflg = 0;
 		free(arr[1 - indexflg]);
 		arr[1 - indexflg] = (SubMatrix *)calloc(size * 3, sizeof(SubMatrix));
-#pragma omp parallel for shared(answerflg, indexflg, setflg, answer)
-		for (i = 0; i < size; i++)
+#pragma omp parallel shared(answerflg, indexflg, setflg, answer)
 		{
-			// int id1 = omp_get_thread_num();
-			// printf("TID:%d\n", id1);
-			if (!arr[indexflg][i])
+#pragma omp for private(i)
+			for (i = 0; i < size; i++)
 			{
-				continue;
+				// int id1 = omp_get_thread_num();
+				// printf("TID:%d\n", id1);
+				if (!arr[indexflg][i])
+				{
+					continue;
+				}
+				search(mat, arr, key, i);
+				if (answerflg == 1)
+				{
+#pragma omp cancel for
+				}
 			}
-			search(mat, arr, key, i);
+			if (answerflg == 1)
+			{
+#pragma omp cancel parallel
+			}
 		}
 		size = 3 * size;
 		indexflg = 1 - indexflg;
@@ -95,6 +106,7 @@ void search(int **mat, SubMatrix **arr, int key, int index)
 	{
 		answerflg = 1;
 		answer = middle;
+		// #pragma omp cancel for parallel
 		// printf("%d %d\n", middle->x, middle->y);
 		return;
 	}
