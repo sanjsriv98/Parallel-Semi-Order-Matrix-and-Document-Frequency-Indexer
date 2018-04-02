@@ -1,8 +1,9 @@
 input*
-exe
+ex*
 DF-2
 DF_hash
 out*
+files
 
 # Prerequisites
 *.d
