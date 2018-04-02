@@ -43,9 +43,10 @@ int main(int argc,char** argv)
 			scanf(" %d", &mat[i][j]);
 		}
 	}
-	printf("READING COMPLETE\n");
+	// printf("READING COMPLETE\n");
 	int key; // = mat[99][99];
 	scanf("%d", &key);
+	// key = 100;
 	long start_t=current_time_usecs();
 	SubMatrix corners = (SubMatrix)calloc(1, sizeof(submatrix));
 	corners->tox = x - 1;
@@ -89,15 +90,7 @@ int main(int argc,char** argv)
 	}
 	free(arr[1]);
 	free(arr[0]);
-	if (answerflg == 1)
-	{
-		printf("%d %d , %d\n", answer->x, answer->y, size / 3);
-		printf("%d\n", mat[answer->x][answer->y]);
-	}
-	else
-	{
-		printf("FAILED %d\n", size);
-	}
+	
 	free(corners);
 	for (i = 0; i < x; i++)
 	{
@@ -107,7 +100,16 @@ int main(int argc,char** argv)
 	long end_t=current_time_usecs();
 
 	// }
-	printf("Time (usecs): %ld\n",end_t-start_t);
+	printf("Time (usecs): %ld\n\n",end_t-start_t);
+	if (answerflg == 1)
+	{
+		printf("X-Index: %d\t Y-Index: %d\n", answer->x, answer->y);
+		// printf("%d\n", mat[answer->x][answer->y]);
+	}
+	else
+	{
+		printf("FAILED %d\n", size);
+	}
     return 0;
 }
 
