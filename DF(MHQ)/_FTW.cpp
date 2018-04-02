@@ -1,8 +1,8 @@
 #define _XOPEN_SOURCE 500
 #include "_FTW.h"
 #include <limits.h>
-#include <string.h> 
-#include <dirent.h>      //For PATH_MAX
+// #include <string.h> 
+// #include <dirent.h>      //For PATH_MAX
 // char path_buf[PATH_MAX + 1];
 hashTable ht ;
 
