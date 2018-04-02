@@ -174,7 +174,7 @@ wordCount fillarray(){
 	wordList temp,prev;
 	#pragma omp parallel shared(arr)
 	{
-	#pragma omp for  private(j,temp)
+	#pragma omp for  private(j,temp,prev)
 	for(i=0;i<M;i++)
 	{	
 		// ht[i].size>0 ? cout << i<<"\t"<<ht[i].size << "\n" : cout << ""; 
@@ -184,12 +184,14 @@ wordCount fillarray(){
 			arr[ht[i].cf-ht[i].size+j].wordName = temp->wc->wordName;
 			prev=temp;
 			temp=temp->next;
+			free(prev->wc);
 			free(prev);
 			// cout << ht[i].size<<arr[ht[i].cf-ht[i].size+j].wordName << "\tinside\t" << arr[ht[i].cf-ht[i].size+j].count << "\n";	
 		}
 		// cout << "\n";
 	}
 	}
+	free(ht);
 	// printArray(arr,ht[m-1].cf);
 	return arr;
 }

@@ -76,7 +76,7 @@ void quicksort(wordCount a, int left, int right)
 void printArray(wordCount a, int n)
 {
     for(int i=0;i<n;i++)
-        cout << a[i].count << "\t"<< hash(a[i].wordName) << "\t"<< a[i].wordName <<"\n";
+        cout << a[i].wordName << "\t"<< a[i].count <<"\n";
 }
 
 //simple check
