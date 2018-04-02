@@ -1,9 +1,10 @@
 input*
 ex*
+Reuters*
 DF-2
 DF_hash
 out*
-files
+file*
 
 # Prerequisites
 *.d
