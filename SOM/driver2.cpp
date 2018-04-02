@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 		}
 	}
 	printf("READING COMPLETE\n");
-	int itr = 10;
+	int itr = 600;
 	int key[itr]; // = mat[99][99];
 	scanf("%d", &key[0]);
 	srand(time(0));
@@ -58,8 +58,8 @@ int main(int argc, char **argv)
 		if (answerflg == 1)
 		{
 			// printf("X-Index: %d\t Y-Index: %d\n", answer->x, answer->y);
-			int answerkey = mat[answer->x][answer->y];
-			printf(" %d %d\n", key[i], answerkey);
+			// int answerkey = mat[answer->x][answer->y];
+			// printf(" %d %d\n", key[i], answerkey);
 			answerflg = 0;
 		}
 		else
@@ -146,8 +146,8 @@ void search(int **mat, SubMatrix corners, int key)
 		answer = middle;
 		double answertime = omp_get_wtime();
 		// #pragma omp cancel for parallel
-		printf("answertime : %f\n", answertime - start);
-		printf("%d %d\n", middle->x, middle->y);
+		// printf("answertime : %f\n", answertime - start);
+		// printf("%d %d\n", middle->x, middle->y);
 		free(corners);
 
 		return;
