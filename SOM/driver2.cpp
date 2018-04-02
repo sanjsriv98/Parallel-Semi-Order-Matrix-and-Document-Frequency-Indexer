@@ -1,35 +1,22 @@
 
-#include "semiorder.h"
+#include "semiorder2.h"
 
 int answerflg, indexflg, setflg;
 
+double start;
+
 Pos answer;
 
-inline long current_time_usecs() __attribute__((always_inline));
-inline long current_time_usecs(){
-    struct timeval t;
-    gettimeofday(&t, NULL);
-	return (t.tv_sec)*1000000L + t.tv_usec;
-
-}
-
-inline long current_time_nsecs() __attribute__((always_inline));
-inline long current_time_nsecs(){
-    struct timespec t;
-    clock_gettime(CLOCK_REALTIME, &t);
-    return (t.tv_sec)*1000000000L + t.tv_nsec;
-}
-
-int main(int argc,char** argv)
+int main(int argc, char **argv)
 {
-	if(argc<2)
-    {
-        cerr << "Usage: "<<argv[0]<< " <num_workers>"<<endl;
-        exit(-1);
-    }
-    int nwork=atoi(argv[1]);
+	if (argc < 2)
+	{
+		cerr << "Usage: " << argv[0] << " <num_workers>" << endl;
+		exit(-1);
+	}
+	int nwork = atoi(argv[1]);
 	omp_set_num_threads(nwork);
-   	answerflg = 0;
+	answerflg = 0;
 	setflg = 1;
 	indexflg = 0;
 	int x, y, i, j;
@@ -44,83 +31,87 @@ int main(int argc,char** argv)
 		}
 	}
 	printf("READING COMPLETE\n");
-	int key[600]; // = mat[99][99];
+	int itr = 10;
+	int key[itr]; // = mat[99][99];
 	scanf("%d", &key[0]);
-    srand(time(0));
-    for(i=0;i<600;i++){
-	    key[i] = (rand()) % (x*y);
-    }
-	long start_t=current_time_usecs();
-	SubMatrix corners = (SubMatrix)calloc(1, sizeof(submatrix));
-	corners->tox = x - 1;
-	corners->toy = y - 1;
+	srand(time(0));
+	int upperbound = x * y;
+	for (i = 0; i < itr; i++)
+	{
+		key[i] = (rand()) % (upperbound);
+	}
+	SubMatrix corners;
 	// SubMatrix *arr[2];
 	int size = 1;
 	// arr[0] = (SubMatrix *)calloc(size, sizeof(SubMatrix));
 	// arr[1] = (SubMatrix *)calloc(size, sizeof(SubMatrix));
 	// arr[0][0] = corners;
-	double start = omp_get_wtime();
-    for(i=0;i<600;i++){
-        #pragma omp parallel shared(answerflg,answer)
-        #pragma omp single
-        search(mat, corners, key[i]);
-    	int answerkey=mat[answer->x][answer->y]; 
-        if (answerflg == 1)
+	start = omp_get_wtime();
+	for (i = 0; i < itr; i++)
 	{
-		// printf("X-Index: %d\t Y-Index: %d\n", answer->x, answer->y);
-		printf(" %d %d\n",key[i], answerkey);
-        answerflg=0;
-	}else
-	{
-		printf("FAILED \n");
+		corners = (SubMatrix)calloc(1, sizeof(submatrix));
+		corners->tox = x - 1;
+		corners->toy = y - 1;
+#pragma omp parallel shared(answerflg, answer)
+#pragma omp single
+		search(mat, corners, key[i]);
+		if (answerflg == 1)
+		{
+			// printf("X-Index: %d\t Y-Index: %d\n", answer->x, answer->y);
+			int answerkey = mat[answer->x][answer->y];
+			printf(" %d %d\n", key[i], answerkey);
+			answerflg = 0;
+		}
+		else
+		{
+			printf("FAILED \n");
+		}
 	}
-    }
-    
-// 	while (setflg != 0 && answerflg != 1)
-// 	{
-// 		setflg = 0;
-// 		// free(arr[1 - indexflg]);
-// 		// arr[1 - indexflg] = (SubMatrix *)calloc(size * 3, sizeof(SubMatrix));
-// // #pragma omp parallel num_threads(nwork) shared(answerflg, indexflg, setflg, answer)
-// 		{
-// // #pragma omp for private(i)
-// 			// for (i = 0; i < size; i++)
-// 			{
-// 				// int id1 = omp_get_thread_num();
-// 				// printf("TID:%d\n", id1);
-// 				// if (!arr[indexflg][i])
-// 				// {
-// 				// 	continue;
-// 				// }
-// 				// search(mat, arr, key);
-// // 				if (answerflg == 1)
-// // 				{
-// // // #pragma omp cancel for
-// // 				}
-// 			}
-// // 			if (answerflg == 1)
-// // 			{
-// // // #pragma omp cancel parallel
-// // 			}
-// 		}
-// 		// size = 3 * size;
-// 		// indexflg = 1 - indexflg;
-// 		// search(mat, corners, key);
-// 	}
+
+	// 	while (setflg != 0 && answerflg != 1)
+	// 	{
+	// 		setflg = 0;
+	// 		// free(arr[1 - indexflg]);
+	// 		// arr[1 - indexflg] = (SubMatrix *)calloc(size * 3, sizeof(SubMatrix));
+	// // #pragma omp parallel num_threads(nwork) shared(answerflg, indexflg, setflg, answer)
+	// 		{
+	// // #pragma omp for private(i)
+	// 			// for (i = 0; i < size; i++)
+	// 			{
+	// 				// int id1 = omp_get_thread_num();
+	// 				// printf("TID:%d\n", id1);
+	// 				// if (!arr[indexflg][i])
+	// 				// {
+	// 				// 	continue;
+	// 				// }
+	// 				// search(mat, arr, key);
+	// // 				if (answerflg == 1)
+	// // 				{
+	// // // #pragma omp cancel for
+	// // 				}
+	// 			}
+	// // 			if (answerflg == 1)
+	// // 			{
+	// // // #pragma omp cancel parallel
+	// // 			}
+	// 		}
+	// 		// size = 3 * size;
+	// 		// indexflg = 1 - indexflg;
+	// 		// search(mat, corners, key);
+	// 	}
 	double end = omp_get_wtime();
 	// free(arr[1]);
 	// free(arr[0]);
-	int answerkey=mat[answer->x][answer->y];
+	// int answerkey = mat[answer->x][answer->y];
 	free(corners);
 	for (i = 0; i < x; i++)
 	{
 		free(mat[i]);
 	}
 	free(mat);
-	long end_t=current_time_usecs();
 
 	// }
-	printf("Time : %f %ld\n\n",end-start,end_t-start_t);
+	printf("Time : %f\n\n", end - start);
 	// if (answerflg == 1)
 	// {
 	// 	printf("X-Index: %d\t Y-Index: %d\n", answer->x, answer->y);
@@ -130,7 +121,7 @@ int main(int argc,char** argv)
 	// {
 	// 	printf("FAILED %d\n", size);
 	// }
-    return 0;
+	return 0;
 }
 
 void search(int **mat, SubMatrix corners, int key)
@@ -145,23 +136,31 @@ void search(int **mat, SubMatrix corners, int key)
 
 	if (corners->fromx > corners->tox && corners->fromy > corners->toy)
 	{
+		free(middle);
 		return;
 	}
 	else if (mat[middle->x][middle->y] == key)
 	{
 		answerflg = 1;
 		answer = middle;
+		double answertime = omp_get_wtime();
 		// #pragma omp cancel for parallel
+		printf("answertime : %f\n", answertime - start);
 		printf("%d %d\n", middle->x, middle->y);
 		return;
 	}
 	else if (corners->fromx == corners->tox && corners->fromy == corners->toy)
 	{
+		free(middle);
 		return;
 	}
 	else if (mat[middle->x][middle->y] < key)
 	{
-		#pragma omp task
+		Pos middletemp = (Pos)malloc(sizeof(pos));
+		// Pos answer;
+		middletemp->x = middle->x;
+		middletemp->y = middle->y;
+#pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
@@ -184,8 +183,13 @@ void search(int **mat, SubMatrix corners, int key)
 			{
 				free(quadrant1);
 			}
+			free(middle);
 		}
-		#pragma omp task
+		middle = (Pos)malloc(sizeof(pos));
+		// Pos answer;
+		middle->x = middletemp->x;
+		middle->y = middletemp->y;
+#pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
@@ -208,9 +212,14 @@ void search(int **mat, SubMatrix corners, int key)
 			{
 				free(quadrant3);
 			}
+			free(middle);
 			// //free(quadrant3);
 		}
-		#pragma omp task
+		middle = (Pos)malloc(sizeof(pos));
+		// Pos answer;
+		middle->x = middletemp->x;
+		middle->y = middletemp->y;
+#pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
@@ -233,14 +242,20 @@ void search(int **mat, SubMatrix corners, int key)
 			{
 				free(quadrant4);
 			}
+			free(middle);
 			// //free(quadrant4);
 		}
+		free(middletemp);
 		// #pragma omp taskwait
 		// return;
 	}
 	else
 	{
-		#pragma omp task
+		Pos middletemp = (Pos)malloc(sizeof(pos));
+		// Pos answer;
+		middletemp->x = middle->x;
+		middletemp->y = middle->y;
+#pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
@@ -263,9 +278,14 @@ void search(int **mat, SubMatrix corners, int key)
 			{
 				free(quadrant1);
 			}
+			free(middle);
 			// //free(quadrant1);
 		}
-		#pragma omp task
+		middle = (Pos)malloc(sizeof(pos));
+		// Pos answer;
+		middle->x = middletemp->x;
+		middle->y = middletemp->y;
+#pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
@@ -288,9 +308,14 @@ void search(int **mat, SubMatrix corners, int key)
 			{
 				free(quadrant3);
 			}
+			free(middle);
 			// //free(quadrant3);
 		}
-		#pragma omp task
+		middle = (Pos)malloc(sizeof(pos));
+		// Pos answer;
+		middle->x = middletemp->x;
+		middle->y = middletemp->y;
+#pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
@@ -313,8 +338,10 @@ void search(int **mat, SubMatrix corners, int key)
 			{
 				free(quadrant2);
 			}
+			free(middle);
 			// //free(quadrant2);
 		}
+		free(middletemp);
 		// #pragma omp taskwait
 		// return;
 	}
