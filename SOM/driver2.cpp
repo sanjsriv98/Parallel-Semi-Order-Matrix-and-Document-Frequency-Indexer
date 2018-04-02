@@ -103,7 +103,7 @@ int main(int argc, char **argv)
 	// free(arr[1]);
 	// free(arr[0]);
 	// int answerkey = mat[answer->x][answer->y];
-	free(corners);
+	// free(corners);
 	for (i = 0; i < x; i++)
 	{
 		free(mat[i]);
@@ -137,6 +137,7 @@ void search(int **mat, SubMatrix corners, int key)
 	if (corners->fromx > corners->tox && corners->fromy > corners->toy)
 	{
 		free(middle);
+		free(corners);
 		return;
 	}
 	else if (mat[middle->x][middle->y] == key)
@@ -147,11 +148,15 @@ void search(int **mat, SubMatrix corners, int key)
 		// #pragma omp cancel for parallel
 		printf("answertime : %f\n", answertime - start);
 		printf("%d %d\n", middle->x, middle->y);
+		free(corners);
+
 		return;
 	}
 	else if (corners->fromx == corners->tox && corners->fromy == corners->toy)
 	{
 		free(middle);
+		free(corners);
+
 		return;
 	}
 	else if (mat[middle->x][middle->y] < key)
@@ -160,14 +165,14 @@ void search(int **mat, SubMatrix corners, int key)
 		// Pos answer;
 		middletemp->x = middle->x;
 		middletemp->y = middle->y;
+		SubMatrix quadrant1 = makecopy(corners);
 #pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
-			SubMatrix quadrant1 = makecopy(corners);
 			quadrant1->tox = middle->x;
 			quadrant1->fromy = middle->y + 1;
-			if (quadrant1->fromy <= corners->toy && answerflg == 0)
+			if (quadrant1->fromy <= quadrant1->toy && answerflg == 0)
 			{
 				setflg = 1;
 				// arr[1 - indexflg][3 * index] = quadrant1;
@@ -189,14 +194,14 @@ void search(int **mat, SubMatrix corners, int key)
 		// Pos answer;
 		middle->x = middletemp->x;
 		middle->y = middletemp->y;
+		SubMatrix quadrant3 = makecopy(corners);
 #pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
-			SubMatrix quadrant3 = makecopy(corners);
 			quadrant3->fromx = middle->x + 1;
 			quadrant3->toy = middle->y;
-			if (quadrant3->fromx <= corners->tox && answerflg == 0)
+			if (quadrant3->fromx <= quadrant3->tox && answerflg == 0)
 			{
 				setflg = 1;
 				// arr[1 - indexflg][(3 * index) + 1] = quadrant3;
@@ -219,14 +224,15 @@ void search(int **mat, SubMatrix corners, int key)
 		// Pos answer;
 		middle->x = middletemp->x;
 		middle->y = middletemp->y;
+		SubMatrix quadrant4 = makecopy(corners);
+
 #pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
-			SubMatrix quadrant4 = makecopy(corners);
 			quadrant4->fromx = middle->x + 1;
 			quadrant4->fromy = middle->y + 1;
-			if (quadrant4->fromy <= corners->toy && quadrant4->fromx <= corners->tox && answerflg == 0)
+			if (quadrant4->fromy <= quadrant4->toy && quadrant4->fromx <= quadrant4->tox && answerflg == 0)
 			{
 				setflg = 1;
 				// arr[1 - indexflg][(3 * index) + 2] = quadrant4;
@@ -255,14 +261,15 @@ void search(int **mat, SubMatrix corners, int key)
 		// Pos answer;
 		middletemp->x = middle->x;
 		middletemp->y = middle->y;
+		SubMatrix quadrant1 = makecopy(corners);
+
 #pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
-			SubMatrix quadrant1 = makecopy(corners);
 			quadrant1->tox = middle->x - 1;
 			quadrant1->fromy = middle->y;
-			if (quadrant1->tox >= corners->fromx && answerflg == 0)
+			if (quadrant1->tox >= quadrant1->fromx && answerflg == 0)
 			{
 				setflg = 1;
 				// arr[1 - indexflg][(3 * index)] = quadrant1;
@@ -285,14 +292,15 @@ void search(int **mat, SubMatrix corners, int key)
 		// Pos answer;
 		middle->x = middletemp->x;
 		middle->y = middletemp->y;
+		SubMatrix quadrant3 = makecopy(corners);
+
 #pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
-			SubMatrix quadrant3 = makecopy(corners);
 			quadrant3->fromx = middle->x;
 			quadrant3->toy = middle->y - 1;
-			if (quadrant3->toy >= corners->fromy && answerflg == 0)
+			if (quadrant3->toy >= quadrant3->fromy && answerflg == 0)
 			{
 				setflg = 1;
 				// arr[1 - indexflg][(3 * index) + 1] = quadrant3;
@@ -315,14 +323,15 @@ void search(int **mat, SubMatrix corners, int key)
 		// Pos answer;
 		middle->x = middletemp->x;
 		middle->y = middletemp->y;
+		SubMatrix quadrant2 = makecopy(corners);
+
 #pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
-			SubMatrix quadrant2 = makecopy(corners);
 			quadrant2->tox = middle->x - 1;
 			quadrant2->toy = middle->y + 1;
-			if (quadrant2->toy >= corners->fromy && quadrant2->tox >= corners->fromx && answerflg == 0)
+			if (quadrant2->toy >= quadrant2->fromy && quadrant2->tox >= quadrant2->fromx && answerflg == 0)
 			{
 				setflg = 1;
 				// arr[1 - indexflg][(3 * index) + 2] = quadrant2;
@@ -345,7 +354,7 @@ void search(int **mat, SubMatrix corners, int key)
 		// #pragma omp taskwait
 		// return;
 	}
-	// free(corners);
+	free(corners);
 	return;
 }
 
