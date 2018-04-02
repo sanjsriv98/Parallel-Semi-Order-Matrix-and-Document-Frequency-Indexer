@@ -1,6 +1,14 @@
 #ifndef SO_H
 #define SO_H
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <omp.h>
+#include <functional>
+#include <algorithm>
+#include <time.h>
+#include <sys/time.h>
+using namespace std;
 typedef struct submatrix
 {
     int fromx;

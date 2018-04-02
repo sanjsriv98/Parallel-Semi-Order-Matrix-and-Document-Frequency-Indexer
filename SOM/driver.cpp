@@ -1,16 +1,35 @@
-#include <stdio.h>
-#include <stdlib.h>
+
 #include "semiorder.h"
-#include <omp.h>
 
 int answerflg, indexflg, setflg;
 
 Pos answer;
 
-int main()
+inline long current_time_usecs() __attribute__((always_inline));
+inline long current_time_usecs(){
+    struct timeval t;
+    gettimeofday(&t, NULL);
+	return (t.tv_sec)*1000000L + t.tv_usec;
+
+}
+
+inline long current_time_nsecs() __attribute__((always_inline));
+inline long current_time_nsecs(){
+    struct timespec t;
+    clock_gettime(CLOCK_REALTIME, &t);
+    return (t.tv_sec)*1000000000L + t.tv_nsec;
+}
+
+int main(int argc,char** argv)
 {
-	// omp_set_num_threads(1);
-	answerflg = 0;
+	if(argc<2)
+    {
+        cerr << "Usage: "<<argv[0]<< " <num_workers>"<<endl;
+        exit(-1);
+    }
+    int nwork=atoi(argv[1]);
+	omp_set_num_threads(nwork);
+   	answerflg = 0;
 	setflg = 1;
 	indexflg = 0;
 	int x, y, i, j;
@@ -27,6 +46,7 @@ int main()
 	printf("READING COMPLETE\n");
 	int key; // = mat[99][99];
 	scanf("%d", &key);
+	long start_t=current_time_usecs();
 	SubMatrix corners = (SubMatrix)calloc(1, sizeof(submatrix));
 	corners->tox = x - 1;
 	corners->toy = y - 1;
@@ -41,7 +61,7 @@ int main()
 		setflg = 0;
 		free(arr[1 - indexflg]);
 		arr[1 - indexflg] = (SubMatrix *)calloc(size * 3, sizeof(SubMatrix));
-#pragma omp parallel shared(answerflg, indexflg, setflg, answer)
+#pragma omp parallel num_threads(nwork) shared(answerflg, indexflg, setflg, answer)
 		{
 #pragma omp for private(i)
 			for (i = 0; i < size; i++)
@@ -84,8 +104,11 @@ int main()
 		free(mat[i]);
 	}
 	free(mat);
+	long end_t=current_time_usecs();
+
 	// }
-	return 0;
+	printf("Time (usecs): %ld\n",end_t-start_t);
+    return 0;
 }
 
 void search(int **mat, SubMatrix **arr, int key, int index)
