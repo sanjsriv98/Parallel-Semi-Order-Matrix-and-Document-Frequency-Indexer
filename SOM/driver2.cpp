@@ -43,57 +43,74 @@ int main(int argc,char** argv)
 			scanf(" %d", &mat[i][j]);
 		}
 	}
-	// printf("READING COMPLETE\n");
-	int key; // = mat[99][99];
-	scanf("%d", &key);
-    srand(time(0));	
-	key =(rand()) % (x*y);
-	// key = 100;
+	printf("READING COMPLETE\n");
+	int key[600]; // = mat[99][99];
+	scanf("%d", &key[0]);
+    srand(time(0));
+    for(i=0;i<600;i++){
+	    key[i] = (rand()) % (x*y);
+    }
 	long start_t=current_time_usecs();
 	SubMatrix corners = (SubMatrix)calloc(1, sizeof(submatrix));
 	corners->tox = x - 1;
 	corners->toy = y - 1;
-	SubMatrix *arr[2];
+	// SubMatrix *arr[2];
 	int size = 1;
-	arr[0] = (SubMatrix *)calloc(size, sizeof(SubMatrix));
-	arr[1] = (SubMatrix *)calloc(size, sizeof(SubMatrix));
-	arr[0][0] = corners;
+	// arr[0] = (SubMatrix *)calloc(size, sizeof(SubMatrix));
+	// arr[1] = (SubMatrix *)calloc(size, sizeof(SubMatrix));
+	// arr[0][0] = corners;
 	double start = omp_get_wtime();
-	while (setflg != 0 && answerflg != 1)
+    for(i=0;i<600;i++){
+        #pragma omp parallel shared(answerflg,answer)
+        #pragma omp single
+        search(mat, corners, key[i]);
+    	int answerkey=mat[answer->x][answer->y]; 
+        if (answerflg == 1)
 	{
-		setflg = 0;
-		free(arr[1 - indexflg]);
-		arr[1 - indexflg] = (SubMatrix *)calloc(size * 3, sizeof(SubMatrix));
-#pragma omp parallel num_threads(nwork) shared(answerflg, indexflg, setflg, answer)
-		{
-#pragma omp for private(i)
-			for (i = 0; i < size; i++)
-			{
-				// int id1 = omp_get_thread_num();
-				// printf("TID:%d\n", id1);
-				if (!arr[indexflg][i])
-				{
-					continue;
-				}
-				search(mat, arr, key, i);
-				if (answerflg == 1)
-				{
-#pragma omp cancel for
-				}
-			}
-			if (answerflg == 1)
-			{
-#pragma omp cancel parallel
-			}
-		}
-		size = 3 * size;
-		indexflg = 1 - indexflg;
-		// search(mat, corners, key);
+		// printf("X-Index: %d\t Y-Index: %d\n", answer->x, answer->y);
+		printf(" %d %d\n",key[i], answerkey);
+        answerflg=0;
+	}else
+	{
+		printf("FAILED \n");
 	}
+    }
+    
+// 	while (setflg != 0 && answerflg != 1)
+// 	{
+// 		setflg = 0;
+// 		// free(arr[1 - indexflg]);
+// 		// arr[1 - indexflg] = (SubMatrix *)calloc(size * 3, sizeof(SubMatrix));
+// // #pragma omp parallel num_threads(nwork) shared(answerflg, indexflg, setflg, answer)
+// 		{
+// // #pragma omp for private(i)
+// 			// for (i = 0; i < size; i++)
+// 			{
+// 				// int id1 = omp_get_thread_num();
+// 				// printf("TID:%d\n", id1);
+// 				// if (!arr[indexflg][i])
+// 				// {
+// 				// 	continue;
+// 				// }
+// 				// search(mat, arr, key);
+// // 				if (answerflg == 1)
+// // 				{
+// // // #pragma omp cancel for
+// // 				}
+// 			}
+// // 			if (answerflg == 1)
+// // 			{
+// // // #pragma omp cancel parallel
+// // 			}
+// 		}
+// 		// size = 3 * size;
+// 		// indexflg = 1 - indexflg;
+// 		// search(mat, corners, key);
+// 	}
 	double end = omp_get_wtime();
-	free(arr[1]);
-	free(arr[0]);
-	
+	// free(arr[1]);
+	// free(arr[0]);
+	int answerkey=mat[answer->x][answer->y];
 	free(corners);
 	for (i = 0; i < x; i++)
 	{
@@ -104,22 +121,22 @@ int main(int argc,char** argv)
 
 	// }
 	printf("Time : %f %ld\n\n",end-start,end_t-start_t);
-	if (answerflg == 1)
-	{
-		printf("X-Index: %d\t Y-Index: %d\n", answer->x, answer->y);
-		printf("%d %d\n",key,mat[answer->x][answer->y]);
-	}
-	else
-	{
-		printf("FAILED %d\n", size);
-	}
+	// if (answerflg == 1)
+	// {
+	// 	printf("X-Index: %d\t Y-Index: %d\n", answer->x, answer->y);
+	// 	printf(" %d %d\n",key, answerkey);
+	// }
+	// else
+	// {
+	// 	printf("FAILED %d\n", size);
+	// }
     return 0;
 }
 
-void search(int **mat, SubMatrix **arr, int key, int index)
+void search(int **mat, SubMatrix corners, int key)
 {
 
-	SubMatrix corners = arr[indexflg][index];
+	// SubMatrix corners = arr[indexflg][index];
 	Pos middle = (Pos)malloc(sizeof(pos));
 	// Pos answer;
 	middle->x = (corners->fromx + corners->tox) / 2;
@@ -135,7 +152,7 @@ void search(int **mat, SubMatrix **arr, int key, int index)
 		answerflg = 1;
 		answer = middle;
 		// #pragma omp cancel for parallel
-		// printf("%d %d\n", middle->x, middle->y);
+		printf("%d %d\n", middle->x, middle->y);
 		return;
 	}
 	else if (corners->fromx == corners->tox && corners->fromy == corners->toy)
@@ -144,7 +161,7 @@ void search(int **mat, SubMatrix **arr, int key, int index)
 	}
 	else if (mat[middle->x][middle->y] < key)
 	{
-		// #pragma omp task
+		#pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
@@ -154,13 +171,13 @@ void search(int **mat, SubMatrix **arr, int key, int index)
 			if (quadrant1->fromy <= corners->toy && answerflg == 0)
 			{
 				setflg = 1;
-				arr[1 - indexflg][3 * index] = quadrant1;
-				// search(mat, quadrant1, key);
+				// arr[1 - indexflg][3 * index] = quadrant1;
+				search(mat, quadrant1, key);
 				// if (answer)
 				// {
-				//free(quadrant1);
+				// free(quadrant1);
 				// printf("%d %d\n", answer->x, answer->y);
-				// return answer;
+				// return;// answer;
 				// }
 			}
 			else
@@ -168,7 +185,7 @@ void search(int **mat, SubMatrix **arr, int key, int index)
 				free(quadrant1);
 			}
 		}
-		// #pragma omp task
+		#pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
@@ -178,13 +195,13 @@ void search(int **mat, SubMatrix **arr, int key, int index)
 			if (quadrant3->fromx <= corners->tox && answerflg == 0)
 			{
 				setflg = 1;
-				arr[1 - indexflg][(3 * index) + 1] = quadrant3;
-				// search(mat, quadrant3, key);
+				// arr[1 - indexflg][(3 * index) + 1] = quadrant3;
+				search(mat, quadrant3, key);
 				// if (answer)
 				// {
-				//free(quadrant3);
+				// free(quadrant3);
 				// printf("%d %d\n", answer->x, answer->y);
-				// return answer;
+				// // return;// answer;
 				// }
 			}
 			else
@@ -193,7 +210,7 @@ void search(int **mat, SubMatrix **arr, int key, int index)
 			}
 			// //free(quadrant3);
 		}
-		// #pragma omp task
+		#pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
@@ -203,13 +220,13 @@ void search(int **mat, SubMatrix **arr, int key, int index)
 			if (quadrant4->fromy <= corners->toy && quadrant4->fromx <= corners->tox && answerflg == 0)
 			{
 				setflg = 1;
-				arr[1 - indexflg][(3 * index) + 2] = quadrant4;
-				// search(mat, quadrant4, key);
+				// arr[1 - indexflg][(3 * index) + 2] = quadrant4;
+				search(mat, quadrant4, key);
 				// if (answer)
 				// {
-				//free(quadrant4);
+				// free(quadrant4);
 				// printf("%d %d\n", answer->x, answer->y);
-				// return answer;
+				// return;// answer;
 				// }
 			}
 			else
@@ -223,7 +240,7 @@ void search(int **mat, SubMatrix **arr, int key, int index)
 	}
 	else
 	{
-		// #pragma omp task
+		#pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
@@ -233,13 +250,13 @@ void search(int **mat, SubMatrix **arr, int key, int index)
 			if (quadrant1->tox >= corners->fromx && answerflg == 0)
 			{
 				setflg = 1;
-				arr[1 - indexflg][(3 * index)] = quadrant1;
-				// search(mat, quadrant1, key);
+				// arr[1 - indexflg][(3 * index)] = quadrant1;
+				search(mat, quadrant1, key);
 				// if (answer)
 				// {
-				//free(quadrant1);
+				// free(quadrant1);
 				// printf("%d %d\n", answer->x, answer->y);
-				// return answer;
+				// return;// answer;
 				// }
 			}
 			else
@@ -248,7 +265,7 @@ void search(int **mat, SubMatrix **arr, int key, int index)
 			}
 			// //free(quadrant1);
 		}
-		// #pragma omp task
+		#pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
@@ -258,13 +275,13 @@ void search(int **mat, SubMatrix **arr, int key, int index)
 			if (quadrant3->toy >= corners->fromy && answerflg == 0)
 			{
 				setflg = 1;
-				arr[1 - indexflg][(3 * index) + 1] = quadrant3;
-				// search(mat, quadrant3, key);
+				// arr[1 - indexflg][(3 * index) + 1] = quadrant3;
+				search(mat, quadrant3, key);
 				// if (answer)
 				// {
-				//free(quadrant3);
+				// free(quadrant3);
 				// printf("%d %d\n", answer->x, answer->y);
-				// return answer;
+				// return;// answer;
 				// }
 			}
 			else
@@ -273,7 +290,7 @@ void search(int **mat, SubMatrix **arr, int key, int index)
 			}
 			// //free(quadrant3);
 		}
-		// #pragma omp task
+		#pragma omp task
 		{
 			// int id1 = omp_get_thread_num();
 			// printf("TID:%d\n", id1);
@@ -283,13 +300,13 @@ void search(int **mat, SubMatrix **arr, int key, int index)
 			if (quadrant2->toy >= corners->fromy && quadrant2->tox >= corners->fromx && answerflg == 0)
 			{
 				setflg = 1;
-				arr[1 - indexflg][(3 * index) + 2] = quadrant2;
-				// search(mat, quadrant2, key);
+				// arr[1 - indexflg][(3 * index) + 2] = quadrant2;
+				search(mat, quadrant2, key);
 				// if (answer)
 				// {
-				//free(quadrant2);
+				// free(quadrant2);
 				// printf("%d %d\n", answer->x, answer->y);
-				// return answer;
+				// return;// answer;
 				// }
 			}
 			else
@@ -301,7 +318,7 @@ void search(int **mat, SubMatrix **arr, int key, int index)
 		// #pragma omp taskwait
 		// return;
 	}
-	free(corners);
+	// free(corners);
 	return;
 }
 
