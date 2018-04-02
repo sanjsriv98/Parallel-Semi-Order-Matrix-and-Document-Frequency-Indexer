@@ -1,17 +1,7 @@
 // SAMIP JASANI 2015A7PS0127P
 // SANJAY 2015A7PS0102P
 
-// C implementation of search and insert operations
-// on Trie
 #include "_Trie.h"
-
-// Alphabet size (# of symbols)
-// #define ALPHABET_SIZE (26)
-
-// Converts key current character into index
-// use only 'a' through 'z' and lower case
-
-// trie node
 
 // Returns new trie node (initialized to NULLs)
 trieNode getNode(void)
@@ -35,8 +25,9 @@ trieNode getNode(void)
 
 // If not present, inserts key into trie
 // If the key is prefix of trie node, just marks leaf node
-void insert(trieNode root, const char *key)
+void insert(trieNode root, char *key)
 {
+    int flag = 0;
     int level;
     int length = strlen(key);
     int index;
@@ -54,6 +45,7 @@ void insert(trieNode root, const char *key)
 
     // mark last node as leaf
     //LOCK letter
+    lock(key);
     pCrawl->count++;
     if (pCrawl->isEndOfWord)
     {
@@ -63,6 +55,7 @@ void insert(trieNode root, const char *key)
             if (pCrawl->count > conf)
             {
                 // LOCK
+                omp_set_lock(&heaplock);
                 if (pCrawl->count > global_heap->arr[0].count)
                 {
                     if (global_heap->arr[0].triePtr)
@@ -73,21 +66,33 @@ void insert(trieNode root, const char *key)
                     global_heap->arr[0].triePtr = pCrawl;
                     minHeapify(global_heap, global_heap->size - 1, 0);
                 }
+                else
+                {
+                    flag = 1;
+                }
                 // UNLOCK
+                omp_unset_lock(&heaplock);
                 conf = global_heap->arr[0].count;
+            }
+            else
+            {
+                flag = 1;
             }
         }
         else
         {
             // LOCK
+            omp_set_lock(&heaplock);
             int index = pCrawl->index;
             global_heap->arr[index].count++;
             minHeapify(global_heap, global_heap->size - 1, index);
             // UNLOCK
+            omp_unset_lock(&heaplock);
             if (index == 0)
             {
                 conf = global_heap->arr[0].count;
             }
+            flag = 1;
         }
     }
     else
@@ -97,6 +102,7 @@ void insert(trieNode root, const char *key)
         if (pCrawl->count > conf)
         {
             // LOCK HEAP
+            omp_set_lock(&heaplock);
             if (pCrawl->count > global_heap->arr[0].count)
             {
                 if (global_heap->arr[0].triePtr)
@@ -107,38 +113,42 @@ void insert(trieNode root, const char *key)
                 global_heap->arr[0].triePtr = pCrawl;
                 minHeapify(global_heap, global_heap->size - 1, 0);
             }
+            else
+            {
+                flag = 1;
+            }
             // UNLOCK
+            omp_unset_lock(&heaplock);
             conf = global_heap->arr[0].count;
+        }
+        else
+        {
+            flag = 1;
         }
     }
     //UNLOCK Letter
+    unlock(key);
+    if (flag == 1)
+    {
+        free(key);
+    }
     return;
 }
 
-// Returns true if key presents in trie, else false
-// int search(trieNode root, const char *key)
-// {
-//     int level;
-//     int length = strlen(key);
-//     int index;
-//     trieNode pCrawl = root;
+void traverse(std::string &prefix, trieNode node)
+{
+    if (node->isEndOfWord)
+        cout << prefix << '\n';
 
-//     for (level = 0; level < length; level++)
-//     {
-//         index = CHAR_TO_INDEX(key[level]);
-
-//         if (!pCrawl->children[index])
-//             return 0;
-
-//         pCrawl = pCrawl->children[index];
-//     }
-
-//     if (pCrawl != NULL && pCrawl->isEndOfWord)
-//     {
-//         return 1;
-//     }
-//     else
-//     {
-//         return 0;
-//     }
-// }
+    for (char index = 0; index < ALPHABET_SIZE; ++index)
+    {
+        char next = 'a' + index;
+        trieNode pChild = node->children[index];
+        if (pChild)
+        {
+            prefix.push_back(next);
+            traverse(prefix, pChild);
+            prefix.pop_back();
+        }
+    }
+}

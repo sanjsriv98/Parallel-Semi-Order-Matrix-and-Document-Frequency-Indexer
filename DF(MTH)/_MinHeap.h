@@ -13,6 +13,15 @@
 #include <ctype.h>
 #include "_Trie.h"
 extern trieNode root;
+extern omp_lock_t heaplock;
+extern omp_lock_t letterlocks[27][26];
+#include <functional>
+#include <algorithm>
+#include <time.h>
+#include <sys/time.h>
+using namespace std;
+#define CUTOFF 2000
+#define MAX_NUM 99999.9
 
 using namespace std;
 typedef struct heapnode
@@ -47,4 +56,11 @@ int minIndex(HeapHead heap, int a, int b);
 void swap(HeapHead heap, int a, int b);
 
 void heapSort(HeapHead heap);
+void lock(char *token);
+void unlock(char *token);
+
+// void omp_init_lock(omp_lock_t *lock);
+// void omp_set_lock(omp_lock_t *lock);
+// void omp_unset_lock(omp_lock_t *lock);
+
 #endif

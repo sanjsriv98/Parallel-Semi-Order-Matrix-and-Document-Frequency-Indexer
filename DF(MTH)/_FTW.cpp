@@ -1,47 +1,66 @@
 #define _XOPEN_SOURCE 500
 #include "_FTW.h"
 
-map<string, countindex> global_dict;
 HeapHead global_heap;
 trieNode root;
 int conf;
+omp_lock_t heaplock;
+omp_lock_t letterlocks[27][26];
+inline long current_time_usecs() __attribute__((always_inline));
+inline long current_time_usecs()
+{
+    struct timeval t;
+    gettimeofday(&t, NULL);
+    return (t.tv_sec) * 1000000L + t.tv_usec;
+}
+
+inline long current_time_nsecs() __attribute__((always_inline));
+inline long current_time_nsecs()
+{
+    struct timespec t;
+    clock_gettime(CLOCK_REALTIME, &t);
+    return (t.tv_sec) * 1000000000L + t.tv_nsec;
+}
 
 int main(int argc, char *argv[])
 {
+    long start_t = current_time_usecs();
 
+    int i, j, k = 10;
+    for (i = 0; i < 27; i++)
+    {
+        for (j = 0; j < 26; j++)
+        {
+            omp_init_lock(&letterlocks[i][j]);
+        }
+    }
+    omp_init_lock(&heaplock);
     root = getNode();
     int flags = FTW_DEPTH | FTW_PHYS;
-    global_heap = InitialiseHead(100);
+    global_heap = InitialiseHead(k);
 #pragma omp parallel
+#pragma omp single
     {
         if (argc == 1)
             nftw(".", fileproc, 1, flags);
         else
             nftw(argv[1], fileproc, 1, flags);
     }
-    map<string, countindex>::iterator itr;
-    for (itr = global_dict.begin(); itr != global_dict.end(); ++itr)
-    {
-        cout << itr->first << '\t' << itr->second.count << '\t' << itr->second.index << '\n';
-    }
+    long end_t = current_time_usecs();
+
     heapSort(global_heap);
+    printf("Time (usecs): %ld\nTime (msecs): %ld\n", end_t - start_t, (end_t - start_t) / 1000);
+    // std::string s;
+    // traverse(s, root);
     return 0;
 }
 
 int fileproc(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf)
 {
-    // printf("%s %lu\n", fpath, strlen(fpath));
-    // if (strlen(fpath) =)
-    // {
     char *temp = (char *)malloc(sizeof(char) * (1 + strlen(fpath)));
     strcpy(temp, fpath);
     // #pragma omp task
     fill_dict(temp);
-    // FILE *fp = fopen(fpath, "r");
-    // char *str = (char *)calloc(100, sizeof(char));
-    // fscanf(fp, "%s ", str);
-    // printf("%s\n", str);
-    // fclose(fp);
-    // }
+
     return 0;
 };

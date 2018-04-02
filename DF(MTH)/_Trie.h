@@ -33,6 +33,8 @@ extern trieNode root;
 #include "_MinHeap.h"
 
 trieNode getNode(void);
-void insert(trieNode root, const char *key);
+void insert(trieNode root, char *key);
+void traverse(std::string &prefix, trieNode node);
+
 // int search(trieNode root, const char *key);
 #endif

@@ -1,7 +1,5 @@
 #include "_MinHeap.h"
 
-// int conf;
-
 HeapHead InitialiseHead(int k)
 {
     HeapHead heap = (HeapHead)malloc(sizeof(heaphead));
@@ -42,16 +40,12 @@ int minIndex(HeapHead heap, int a, int b)
 void swap(HeapHead heap, int a, int b)
 {
     heapnode temp;
-    // temp.triePtr = heap->arr[a].triePtr;
     if (heap->arr[a].triePtr)
     {
         heap->arr[a].triePtr->index = b;
         temp.triePtr = heap->arr[a].triePtr;
         temp.count = heap->arr[a].count;
         temp.word = heap->arr[a].word;
-        // heap->arr[a].triePtr->index = b;
-        // temp.word = heap->arr[a].word;
-        // heap->arr[b].word = temp.word;
     }
     else
     {
@@ -65,10 +59,6 @@ void swap(HeapHead heap, int a, int b)
         heap->arr[a].triePtr = heap->arr[b].triePtr;
         heap->arr[a].count = heap->arr[b].count;
         heap->arr[a].word = heap->arr[b].word;
-
-        // heap->arr[b].triePtr->index = a;
-        // heap->arr[a].word = heap->arr[b].word;
-        // heap->arr[a].count = heap->arr[b].count;
     }
     else
     {
@@ -88,8 +78,6 @@ void swap(HeapHead heap, int a, int b)
         heap->arr[b].count = 0;
         heap->arr[b].word = "";
     }
-    // temp.count = heap->arr[a].count;
-    // heap->arr[b].count = temp.count;
 }
 
 void heapSort(HeapHead heap)
@@ -108,20 +96,40 @@ void heapSort(HeapHead heap)
     }
 }
 
-// int main()
-// {
-//     conf = 0;
-//     HeapHead heap = InitialiseHead(10);
-//     int i;
-//     string s = "Hadbaudadasodnasioi";
-//     for (i = 0; i < 10; i++)
-//     {
-//         heap->arr[0].count = 1000 % (i + 5) + 1;
-//         heap->arr[0].word = s[i % 5];
-//         cout << heap->arr[0].word << heap->arr[0].count << '\n';
-//         minHeapify(heap, 9, 0);
-//     }
+void lock(char *token)
+{
+    if (strlen(token) == 0)
+    {
+        return;
+    }
+    else if (strlen(token) == 1)
+    {
+        omp_set_lock(&letterlocks[0][CHAR_TO_INDEX(token[0])]);
+    }
+    else
+    {
+        omp_set_lock(&letterlocks[1 + CHAR_TO_INDEX(token[0])][CHAR_TO_INDEX(token[1])]);
+    }
+    return;
+}
 
-//     heapSort(heap);
-//     return 0;
-// }
+void unlock(char *token)
+{
+    if (strlen(token) == 0)
+    {
+        return;
+    }
+    else if (strlen(token) == 1)
+    {
+        omp_unset_lock(&letterlocks[0][CHAR_TO_INDEX(token[0])]);
+    }
+    else
+    {
+        omp_unset_lock(&letterlocks[1 + CHAR_TO_INDEX(token[0])][CHAR_TO_INDEX(token[1])]);
+    }
+    return;
+}
+
+// void omp_init_lock(omp_lock_t *lock) { return; }
+// void omp_set_lock(omp_lock_t *lock) { return; }
+// void omp_unset_lock(omp_lock_t *lock) { return; }

@@ -16,6 +16,6 @@ extern map<string, countindex> global_dict;
 // map<string, countindex> global_dict;
 // #endif
 
-void fill_dict(const char *docName);
+void fill_dict(char *docName);
 
 void fill_global(char *token);
