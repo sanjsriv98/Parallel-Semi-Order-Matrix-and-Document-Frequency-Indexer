@@ -42,7 +42,7 @@ void filetreewalk(char *root){
     int res=1;
     if (NULL == (FD = opendir (root))) 
     {   
-        fprintf(stderr, "Error : Failed to open input directory\n");
+        fprintf(stderr, "Error : Failed to open input directory %s\n",root);
         return ;
     }
     while ((in_file=readdir(FD))) 
@@ -56,6 +56,7 @@ void filetreewalk(char *root){
             rootcopy=(char*)malloc((strlen(root)+1)*sizeof(char));
             strcpy(rootcopy,root);
             strcpy(inputfile,in_file->d_name);
+            // cout << target(rootcopy,inputfile) << "\n";
             #pragma omp task shared(hashLocks) //private(inputfile,rootcopy)
             {
                 
@@ -69,6 +70,7 @@ void filetreewalk(char *root){
             rootcopy=(char*)malloc((strlen(root)+1)*sizeof(char));
             strcpy(rootcopy,root);
             strcpy(inputfile,in_file->d_name);
+            // cout << target(rootcopy,inputfile) << "\n";
             #pragma omp task shared(hashLocks) //   private(inputfile,rootcopy)
             {
                 fill_ht(target(rootcopy,inputfile));
@@ -151,6 +153,7 @@ int main(int argc, char *argv[])
     // }
     // heapSort(global_heap);
     printf("Time (usecs): %ld\n",end_t-start_t);
+    printf("Time (msecs): %ld\n",(end_t-start_t)/1000);    
     return 0;
 }
 
