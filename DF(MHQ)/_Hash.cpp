@@ -171,7 +171,7 @@ void fillCumFreq(){
 wordCount fillarray(){
 	wordCount arr =(wordCount)malloc(sizeof(wordcount)*ht[M-1].cf);
 	int i=0,j=0;
-	wordList temp;
+	wordList temp,prev;
 	#pragma omp parallel shared(arr)
 	{
 	#pragma omp for  private(j,temp)
@@ -182,7 +182,9 @@ wordCount fillarray(){
 		for(j=0;j<ht[i].size;j++){
 			arr[ht[i].cf-ht[i].size+j].count =temp->wc->count;
 			arr[ht[i].cf-ht[i].size+j].wordName = temp->wc->wordName;
+			prev=temp;
 			temp=temp->next;
+			free(prev);
 			// cout << ht[i].size<<arr[ht[i].cf-ht[i].size+j].wordName << "\tinside\t" << arr[ht[i].cf-ht[i].size+j].count << "\n";	
 		}
 		// cout << "\n";

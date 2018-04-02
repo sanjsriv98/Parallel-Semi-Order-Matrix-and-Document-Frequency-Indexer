@@ -14,7 +14,7 @@ quickSort.o: quickSort.cpp quickSort.h _Hash.h
 	g++ -c -g quickSort.cpp -fopenmp
 
 _Hash.o: _Hash.cpp _Hash.h
-	g++ -c -g _Hash.cpp -fopenmp
+	g++ -c -g _Hash.cpp  -fopenmp
 
 clean:
 	rm exe *.o 

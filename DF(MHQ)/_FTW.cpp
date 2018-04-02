@@ -1,5 +1,9 @@
 #define _XOPEN_SOURCE 500
 #include "_FTW.h"
+#include <limits.h>
+#include <string.h> 
+#include <dirent.h>      //For PATH_MAX
+// char path_buf[PATH_MAX + 1];
 hashTable ht ;
 
 omp_lock_t hashLocks[M];
@@ -18,6 +22,70 @@ inline long current_time_nsecs(){
     clock_gettime(CLOCK_REALTIME, &t);
     return (t.tv_sec)*1000000000L + t.tv_nsec;
 }
+
+char* target(char* a,char* b){
+    char *targetdir = (char*)malloc(2048*sizeof(char));
+    strcpy(targetdir,a);
+    strcat(targetdir,"/");
+    strcat(targetdir,b);
+    return targetdir;
+}
+
+
+void filetreewalk(char *root){
+    DIR* FD;
+    struct dirent* in_file;
+    struct dirent** chils;
+    FILE    *output_file;
+    FILE    *entry_file;
+    char* inputfile,*rootcopy;
+    int res=1;
+    if (NULL == (FD = opendir (root))) 
+    {   
+        fprintf(stderr, "Error : Failed to open input directory\n");
+        return ;
+    }
+    while ((in_file=readdir(FD))) 
+    {   
+        if (!strcmp (in_file->d_name, "."))
+            continue;
+        if (!strcmp (in_file->d_name, ".."))    
+            continue;
+        if (in_file->d_type == DT_DIR){
+            inputfile = (char*)malloc((strlen(in_file->d_name)+1)*sizeof(char));
+            rootcopy=(char*)malloc((strlen(root)+1)*sizeof(char));
+            strcpy(rootcopy,root);
+            strcpy(inputfile,in_file->d_name);
+            #pragma omp task shared(hashLocks) //private(inputfile,rootcopy)
+            {
+                
+                filetreewalk(target(rootcopy,inputfile));
+                free(inputfile);free(rootcopy);
+            }
+            // #pragma omp taskwait
+        }
+        else if(in_file->d_type==DT_REG){
+            inputfile = (char*)malloc((strlen(in_file->d_name)+1)*sizeof(char));
+            rootcopy=(char*)malloc((strlen(root)+1)*sizeof(char));
+            strcpy(rootcopy,root);
+            strcpy(inputfile,in_file->d_name);
+            #pragma omp task shared(hashLocks) //   private(inputfile,rootcopy)
+            {
+                fill_ht(target(rootcopy,inputfile));
+                free(inputfile);free(rootcopy);
+            }
+            // #pragma omp taskwait
+        }
+        // if((res = readdir_r(FD,in_file,chils))!=0){
+        //     fprintf(stderr, "Error : Failed to open directory %s\n",in_file->d_name);
+        // }
+    }
+    #pragma omp taskwait
+    closedir(FD);
+    // 
+    return;
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -43,17 +111,20 @@ int main(int argc, char *argv[])
         {
     if (argc == 3){
         // #pragma omp task
-        nftw(".", fileproc, 1, flags);
+        // nftw(".", fileproc, 1, flags);
+        filetreewalk(".");
     }
     else{
         // #pragma omp task
-        nftw(argv[3], fileproc, 1, flags);
+        // nftw(argv[3], fileproc, 1, flags);
+        filetreewalk(argv[3]);
     }
     // #pragma omp taskwait
     }
     
     }
     // printHT();
+    #pragma omp barrier
     fillCumFreq();
     // printHT();
     // for(int i=0;i<m;i++){
