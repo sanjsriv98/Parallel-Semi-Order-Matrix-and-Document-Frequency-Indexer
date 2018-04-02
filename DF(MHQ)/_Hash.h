@@ -23,6 +23,7 @@
 using namespace std;
 #define CUTOFF 2000
 #define MAX_NUM 99999.9
+#define M 5000
 
 
 typedef struct wordcount{
@@ -49,21 +50,19 @@ typedef struct hashtable{
 typedef hashtable* hashTable;
 
 extern hashTable ht ;
-extern int m;
+extern omp_lock_t hashLocks[M];
 
 void fill_ht(char* docName);
 char* isalphabet(char* temp);
-int hash(char *str,int m);
+int hash(char *str);
 void createEmptyHT();
 void insertWord(char* str);
 void printHT();
 void fillCumFreq();
 wordCount fillarray();
-int acompare(wordcount lhs, wordcount rhs);
-int divide(wordCount a, int left, int right);
-void seq(wordCount a, int left, int right);
-void quicksort(wordCount a, int left, int right);
-void printArray(wordCount a, int n);
-bool isArraySorted(wordCount a, int n);
-int fileproc(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf);
 
+// void omp_set_lock(omp_lock_t *lock);
+
+// void omp_unset_lock(omp_lock_t *lock);
+
+// void omp_init_lock(omp_lock_t *lock);

@@ -7,21 +7,21 @@ char* isalphabet(char* temp){
 }
 
 
-int hash(char *str,int m)
+int hash(char *str)
 {
     unsigned long hash = 5381;
     int c;
     while (c = *str++)
         hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-    return (int)(hash%m);
+    return (int)(hash%M);
 }
 
 void createEmptyHT(){
-	ht =(hashTable)calloc(m,sizeof(hashtable)); 
+	ht =(hashTable)calloc(M,sizeof(hashtable)); 
 }
 
 void insertWord(char* str){
-	int h = hash(str,m);
+	int h = hash(str);
 	if(ht[h].head==NULL){
 
 		ht[h].size=1;
@@ -98,12 +98,12 @@ void insertWord(char* str){
 	return;
 }
 void fill_ht(char* docName){
-	
+	// cout << docName << "\n";
 	FILE* entry_file = fopen(docName, "r");
 
 	if (entry_file == NULL)
 	{
-		fprintf(stderr, "Error : Failed to open entry file\n");
+		fprintf(stderr, "Error : Failed to open entry file %s\n",docName);
 		return;
 	}
 	map<string, int> local_dict;
@@ -111,7 +111,7 @@ void fill_ht(char* docName){
 	char * line = NULL,*saveptr1,*str1,*token,*p;
 	size_t len = 0;
 	ssize_t read;
-	int j,k,temp;
+	int j,k,temp,h;
 	while ((read = getline(&line, &len, entry_file)) != -1) {
 		line = isalphabet(line);
 		for (j = 1, str1 = line; ; j++, str1 = NULL) {
@@ -125,17 +125,24 @@ void fill_ht(char* docName){
 			if (itr == local_dict.end())
 			{
 				local_dict[token] = 1;
+				h = hash(token);
+				// cout << "lock is "<< h << "\n";
+				omp_set_lock(&hashLocks[h]);
+				// cout << "hvhgghhh" << h<<"\n";
+
 				insertWord(token);
+				omp_unset_lock(&hashLocks[h]);
 			}
 		}
 	}
 	local_dict.clear();
+	fclose(entry_file);
 	return;
 }
 
 void printHT(){
 	int i=0,s=0;
-	for(i=0;i<m;i++){
+	for(i=0;i<M;i++){
 		if(ht[i].head==NULL){
 			continue;
 		}
@@ -152,8 +159,8 @@ void printHT(){
 }
 
 void fillCumFreq(){
-	int i=0,size=m,temp=0;
-	for(i=0;i<m;i++){
+	int i=0,size=M,temp=0;
+	for(i=0;i<M;i++){
 		temp+=ht[i].size;
 		ht[i].cf=temp;
 	}
@@ -162,13 +169,13 @@ void fillCumFreq(){
 
 
 wordCount fillarray(){
-	wordCount arr =(wordCount)malloc(sizeof(wordcount)*ht[m-1].cf);
+	wordCount arr =(wordCount)malloc(sizeof(wordcount)*ht[M-1].cf);
 	int i=0,j=0;
 	wordList temp;
-	// #pragma omp parallel shared(arr)
+	#pragma omp parallel shared(arr)
 	{
-	// #pragma omp for  private(j,temp)
-	for(i=0;i<m;i++)
+	#pragma omp for  private(j,temp)
+	for(i=0;i<M;i++)
 	{	
 		// ht[i].size>0 ? cout << i<<"\t"<<ht[i].size << "\n" : cout << ""; 
 		temp=ht[i].head;
@@ -185,3 +192,9 @@ wordCount fillarray(){
 	return arr;
 }
 
+
+// void omp_set_lock(omp_lock_t *lock){return;}
+
+// void omp_unset_lock(omp_lock_t *lock){return;}
+
+// void omp_init_lock(omp_lock_t *lock){return;}

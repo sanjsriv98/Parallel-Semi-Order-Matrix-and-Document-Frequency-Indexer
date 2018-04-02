@@ -1,4 +1,4 @@
-#include "_Hash.h"
+#include "quickSort.h"
 /*
  * The divide chooses as pivot the middle element and redistributes the elements
  */

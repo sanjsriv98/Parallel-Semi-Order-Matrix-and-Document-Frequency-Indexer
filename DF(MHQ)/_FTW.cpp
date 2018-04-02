@@ -1,7 +1,9 @@
 #define _XOPEN_SOURCE 500
 #include "_FTW.h"
 hashTable ht ;
-int m;
+
+omp_lock_t hashLocks[M];
+
 inline long current_time_usecs() __attribute__((always_inline));
 inline long current_time_usecs(){
     struct timeval t;
@@ -24,10 +26,13 @@ int main(int argc, char *argv[])
         cerr << "Usage: "<<argv[0]<< " <num_elements> <num_workers>"<<endl;
         exit(-1);
     }
-
+    int i=0;
+    for(i=0;i<M;i++){
+        omp_init_lock(&hashLocks[i]);
+    }
     int num_elem=atoi(argv[1]);
     int nwork=atoi(argv[2]);
-    m=5000;
+    
     long start_t=current_time_usecs();
 
     createEmptyHT();
@@ -58,7 +63,7 @@ int main(int argc, char *argv[])
     wordCount arr = fillarray();
 #pragma omp parallel num_threads(nwork)
 #pragma omp single
-    quicksort(arr,0,ht[m-1].cf-1);
+    quicksort(arr,0,ht[M-1].cf-1);
     long end_t=current_time_usecs();
     printArray(arr,num_elem);
     if(!isArraySorted(arr,num_elem))
@@ -74,7 +79,7 @@ int main(int argc, char *argv[])
     //     cout << itr->first << '\t' << itr->second.count << '\t' << itr->second.index << '\n';
     // }
     // heapSort(global_heap);
-    printf("Time (usecs): %Ld\n",end_t-start_t);
+    printf("Time (usecs): %ld\n",end_t-start_t);
     return 0;
 }
 
@@ -85,7 +90,7 @@ int fileproc(const char *fpath, const struct stat *sb, int typeflag, struct FTW 
     // {
     char* tempstr = (char*)malloc((1+strlen(fpath))*sizeof(char));
     strcpy(tempstr,fpath);
-    // #pragma omp task
+    #pragma omp task shared(hashLocks)
     { 
         // fill_dict(tempstr);
         fill_ht(tempstr);

@@ -4,9 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include "_Hash.h"
+#include "quickSort.h"
 
 int fileproc(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf);
 
 extern hashTable ht ;
-extern int m;
