@@ -69,11 +69,5 @@ void insertWord(char* str,int h);
 void printHT();
 void fillCumFreq();
 wordCount fillarray();
-
-// void omp_set_lock(omp_lock_t *lock);
-
-// void omp_unset_lock(omp_lock_t *lock);
-
-// void omp_init_lock(omp_lock_t *lock);
 void makeStopWords(const char* fname);
 int checkStopWord(char* key,int hash);
