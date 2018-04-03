@@ -2,26 +2,31 @@
 
 char* isalphabet(char* temp){
 	char* p;
-	for ( p=temp; *p; ++p) if(!isalpha(*p)) *p=' ';
+	for ( p=temp; *p; ++p) 
+	{
+		if(!isalpha(*p))
+		 	*p=' ';
+		else
+			*p=tolower(*p);
+	}
 	return temp;
 }
 
 
-int hash(char *str)
+int myhash(char *str)
 {
-    unsigned long hash = 5381;
+    unsigned long myhash = 5381;
     int c;
     while (c = *str++)
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-    return (int)(hash%M);
+        myhash = ((myhash << 5) + myhash) + c; /* myhash * 33 + c */
+    return (int)(myhash%M);
 }
 
 void createEmptyHT(){
 	ht =(hashTable)calloc(M,sizeof(hashtable)); 
 }
 
-void insertWord(char* str){
-	int h = hash(str);
+void insertWord(char* str,int h){
 	if(ht[h].head==NULL){
 
 		ht[h].size=1;
@@ -118,19 +123,20 @@ void fill_ht(char* docName){
 			token = strtok_r(str1,"  \n\t", &saveptr1);
 			if (token == NULL)
 				break;
-			for ( p=token; *p; ++p) *p = tolower(*p);
-
+			// for ( p=token; *p; ++p) *p = tolower(*p);
+			h = myhash(token);	
+			if(checkStopWord(token,h)==1) continue;
 			itr = local_dict.find(token);
 
 			if (itr == local_dict.end())
 			{
 				local_dict[token] = 1;
-				h = hash(token);
+				// h = myhash(token);
 				// cout << "lock is "<< h << "\n";
 				omp_set_lock(&hashLocks[h]);
 				// cout << "hvhgghhh" << h<<"\n";
 
-				insertWord(token);
+				insertWord(token,h);
 				omp_unset_lock(&hashLocks[h]);
 			}
 		}
@@ -146,7 +152,7 @@ void printHT(){
 		if(ht[i].head==NULL){
 			continue;
 		}
-		printf("Hash Entry %d : %d\n",i,ht[i].size);
+		printf("myhash Entry %d : %d\n",i,ht[i].size);
 		wordList temp =ht[i].head;
 		while(temp!=NULL){
 			printf("%s %d\n",temp->wc->wordName,temp->wc->count);
@@ -159,7 +165,7 @@ void printHT(){
 }
 
 void fillCumFreq(){
-	int i=0,size=M,temp=0;
+	int i=0,temp=0;
 	for(i=0;i<M;i++){
 		temp+=ht[i].size;
 		ht[i].cf=temp;
@@ -172,9 +178,9 @@ wordCount fillarray(){
 	wordCount arr =(wordCount)malloc(sizeof(wordcount)*ht[M-1].cf);
 	int i=0,j=0;
 	wordList temp,prev;
-	#pragma omp parallel shared(arr)
-	{
-	#pragma omp for  private(j,temp,prev)
+	// #pragma omp parallel shared(arr)
+	// #pragma omp for  private(j,temp,prev)
+	#pragma omp parallel for schedule(dynamic) private(j,temp,prev)
 	for(i=0;i<M;i++)
 	{	
 		// ht[i].size>0 ? cout << i<<"\t"<<ht[i].size << "\n" : cout << ""; 
@@ -190,7 +196,6 @@ wordCount fillarray(){
 		}
 		// cout << "\n";
 	}
-	}
 	free(ht);
 	// printArray(arr,ht[m-1].cf);
 	return arr;
@@ -202,3 +207,61 @@ wordCount fillarray(){
 // void omp_unset_lock(omp_lock_t *lock){return;}
 
 // void omp_init_lock(omp_lock_t *lock){return;}
+
+void makeStopWords(const char* fname){
+	sht = (stopWord*)malloc(M*sizeof(stopWord));
+	int i;
+	for(i=0;i<M;i++){
+		sht[i]=NULL;
+	} 
+	FILE* fp = fopen(fname,"r");
+	if (fp == NULL)
+	{
+		fprintf(stderr, "Error : Failed to open entry file\n");
+		return ;
+		// return 1;
+	}
+	char * line = NULL,*saveptr1,*str1,*token,*p;
+	size_t len = 0;
+	ssize_t read;
+	stopWord temp;
+	char* key;
+	int j,k;
+	while ((read = getline(&line, &len, fp)) != -1) {
+		line = isalphabet(line);
+		for (j = 1, str1 = line; ; j++, str1 = NULL) {
+			token = strtok_r(str1," \n\t", &saveptr1);
+			if (token == NULL)
+				break;
+			// for ( p=token; *p; ++p) *p = tolower(*p);
+			k=myhash(token);
+			key=(char*)malloc(sizeof(char)*(strlen(token)+1));
+			strcpy(key,token);
+			temp = (stopWord)malloc(sizeof(stopword));
+			temp->key=key;
+			temp->next=sht[k];
+			sht[k]=temp;
+			// ht[k]=(token,ht[k]);
+			
+		}
+	}
+	fclose(fp);
+	return;
+}
+
+int checkStopWord(char* key,int hash){
+	if(sht[hash]==NULL){
+		return 0;
+	}
+	else{
+		stopWord temp;
+		temp=sht[hash];
+		while(temp!=NULL){
+			if(strcmp(temp->key,key)==0){
+				return 1;
+			}
+			temp=temp->next;
+		}
+		return 0;
+	}
+}

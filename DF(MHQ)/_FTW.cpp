@@ -5,42 +5,29 @@
 // #include <dirent.h>      //For PATH_MAX
 // char path_buf[PATH_MAX + 1];
 hashTable ht ;
-
+stopWord* sht;
 omp_lock_t hashLocks[M];
 
-inline long current_time_usecs() __attribute__((always_inline));
-inline long current_time_usecs(){
-    struct timeval t;
-    gettimeofday(&t, NULL);
-    return (t.tv_sec)*1000000L + t.tv_usec;
-
-}
-
-inline long current_time_nsecs() __attribute__((always_inline));
-inline long current_time_nsecs(){
-    struct timespec t;
-    clock_gettime(CLOCK_REALTIME, &t);
-    return (t.tv_sec)*1000000000L + t.tv_nsec;
-}
-
 char* target(char* a,char* b){
-    char *targetdir = (char*)malloc(2048*sizeof(char));
+    char *targetdir = (char*)malloc((2+strlen(a)+strlen(b))*sizeof(char));
     strcpy(targetdir,a);
     strcat(targetdir,"/");
     strcat(targetdir,b);
+    free(b);
+    free(a);
     return targetdir;
 }
 
 
-void filetreewalk(char *root){
+void filetreewalk(const char *root){
     DIR* FD;
     struct dirent* in_file;
-    struct dirent** chils;
-    FILE    *output_file;
+    // struct dirent** chils;
+    // FILE    *output_file;
     FILE    *entry_file;
     char* inputfile,*rootcopy;
-    int res=1;
-    if (NULL == (FD = opendir (root))) 
+    // int res=1;
+    if (NULL==(FD = opendir (root)))
     {   
         fprintf(stderr, "Error : Failed to open input directory %s\n",root);
         return ;
@@ -57,11 +44,11 @@ void filetreewalk(char *root){
             strcpy(rootcopy,root);
             strcpy(inputfile,in_file->d_name);
             // cout << target(rootcopy,inputfile) << "\n";
-            #pragma omp task shared(hashLocks) //private(inputfile,rootcopy)
+            #pragma omp task //shared(hashLocks) //private(inputfile,rootcopy)
             {
-                
-                filetreewalk(target(rootcopy,inputfile));
-                free(inputfile);free(rootcopy);
+                inputfile=target(rootcopy,inputfile);
+                filetreewalk(inputfile);
+                free(inputfile);//;free(rootcopy);
             }
             // #pragma omp taskwait
         }
@@ -73,10 +60,13 @@ void filetreewalk(char *root){
             // cout << target(rootcopy,inputfile) << "\n";
             #pragma omp task shared(hashLocks) //   private(inputfile,rootcopy)
             {
-                fill_ht(target(rootcopy,inputfile));
-                free(inputfile);free(rootcopy);
+                inputfile = target(rootcopy,inputfile);
+                fill_ht(inputfile);
+                free(inputfile);//free(rootcopy);
             }
             // #pragma omp taskwait
+        }else{
+            fprintf(stderr, "Error : unknown file type %s\n",in_file->d_name);        
         }
         // if((res = readdir_r(FD,in_file,chils))!=0){
         //     fprintf(stderr, "Error : Failed to open directory %s\n",in_file->d_name);
@@ -102,11 +92,10 @@ int main(int argc, char *argv[])
     }
     int num_elem=atoi(argv[1]);
     int nwork=atoi(argv[2]);
-    
-    long start_t=current_time_usecs();
-
+    makeStopWords("./stopwords");
+    double start=omp_get_wtime();
     createEmptyHT();
-    int flags = FTW_DEPTH | FTW_PHYS;
+    // int flags = FTW_DEPTH | FTW_PHYS;
 #pragma omp parallel 
     {
     #pragma omp single
@@ -128,22 +117,24 @@ int main(int argc, char *argv[])
     // printHT();
     #pragma omp barrier
     fillCumFreq();
+    int size =ht[M-1].cf-1;
     // printHT();
     // for(int i=0;i<m;i++){
     //     cout << "dfsdf"<<ht[i].size << "\n";
     // }
     // printHT(ht,m);
+    // #pragma omp parallel single num_threads(nwork)
     wordCount arr = fillarray();
 #pragma omp parallel num_threads(nwork)
 #pragma omp single
-    quicksort(arr,0,ht[M-1].cf-1);
-    long end_t=current_time_usecs();
+    quicksort(arr,0,size);
+    double end=omp_get_wtime();    
     printArray(arr,num_elem);
-    if(!isArraySorted(arr,num_elem))
-    {
-        fprintf(stderr,"Error: array is not sorted!!\n");
-        exit(-1);
-    }
+    // if(!isArraySorted(arr,num_elem))
+    // {
+    //     fprintf(stderr,"Error: array is not sorted!!\n");
+    //     exit(-1);
+    // }
     // #pragma omp barrier
 
     // map<string, countindex>::iterator itr;
@@ -152,28 +143,27 @@ int main(int argc, char *argv[])
     //     cout << itr->first << '\t' << itr->second.count << '\t' << itr->second.index << '\n';
     // }
     // heapSort(global_heap);
-    printf("Time (usecs): %ld\n",end_t-start_t);
-    printf("Time (msecs): %ld\n",(end_t-start_t)/1000);    
+    cout << "Time: " << (end-start) << "\n";
     return 0;
 }
 
-int fileproc(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf)
-{
+// int fileproc(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf)
+// {
     // printf("%s %lu\n", fpath, strlen(fpath));
     // if (strlen(fpath) =)
     // {
-    char* tempstr = (char*)malloc((1+strlen(fpath))*sizeof(char));
-    strcpy(tempstr,fpath);
-    #pragma omp task shared(hashLocks)
-    { 
-        // fill_dict(tempstr);
-        fill_ht(tempstr);
-    }
-    // FILE *fp = fopen(fpath, "r");
-    // char *str = (char *)calloc(100, sizeof(char));
-    // fscanf(fp, "%s ", str);
-    // printf("%s\n", str);
-    // fclose(fp);
-    // }
-    return 0;
-};
+//     char* tempstr = (char*)malloc((1+strlen(fpath))*sizeof(char));
+//     strcpy(tempstr,fpath);
+//     #pragma omp task shared(hashLocks)
+//     { 
+//         // fill_dict(tempstr);
+//         fill_ht(tempstr);
+//     }
+//     // FILE *fp = fopen(fpath, "r");
+//     // char *str = (char *)calloc(100, sizeof(char));
+//     // fscanf(fp, "%s ", str);
+//     // printf("%s\n", str);
+//     // fclose(fp);
+//     // }
+//     return 0;
+// };

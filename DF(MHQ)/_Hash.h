@@ -23,7 +23,7 @@
 using namespace std;
 #define CUTOFF 2000
 #define MAX_NUM 99999.9
-#define M 5000
+#define M 50000
 
 
 typedef struct wordcount{
@@ -32,6 +32,14 @@ typedef struct wordcount{
 }wordcount;
 
 typedef wordcount* wordCount;
+
+typedef struct stopword
+{
+	char* key;
+	struct stopword* next;
+}stopword;
+
+typedef stopword* stopWord;
 
 typedef struct wordlist
 {
@@ -51,12 +59,13 @@ typedef hashtable* hashTable;
 
 extern hashTable ht ;
 extern omp_lock_t hashLocks[M];
+extern stopWord* sht;
 
 void fill_ht(char* docName);
 char* isalphabet(char* temp);
-int hash(char *str);
+int myhash(char *str);
 void createEmptyHT();
-void insertWord(char* str);
+void insertWord(char* str,int h);
 void printHT();
 void fillCumFreq();
 wordCount fillarray();
@@ -66,3 +75,5 @@ wordCount fillarray();
 // void omp_unset_lock(omp_lock_t *lock);
 
 // void omp_init_lock(omp_lock_t *lock);
+void makeStopWords(const char* fname);
+int checkStopWord(char* key,int hash);
