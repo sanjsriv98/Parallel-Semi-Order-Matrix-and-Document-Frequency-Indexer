@@ -1,3 +1,5 @@
+runall: run2 run3 run4
+
 run: exe
 	./exe 4 < input4
 

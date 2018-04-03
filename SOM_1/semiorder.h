@@ -27,7 +27,6 @@ typedef struct pos
 typedef pos *Pos;
 
 void search(int **mat, SubMatrix corners, int key);
-// void search(int **mat, SubMatrix arr, int key);
 
 SubMatrix makecopy(SubMatrix m);
 

@@ -1,6 +1,8 @@
-
+//2015A7PS0102P 2015A7PS0127P
 #include "semiorder.h"
 
+
+//global shared variables
 int answerflg;
 
 Pos answer;
@@ -27,20 +29,13 @@ int main(int argc, char **argv)
 		}
 	}
 	printf("READING COMPLETE\n");
-	int itr = x*10;
+	int itr =x;
 	int* key=(int*)malloc(itr*sizeof(int)); // = mat[99][99];
 	srand(time(0));
 	int upperbound = x * y;
 	// #pragma omp parallel for
 	for (i = 0; i < itr; i++)
 		key[i] = (rand()) % (upperbound);
-	// printf("key: %d\n", key);
-	// key = 100;
-	// SubMatrix corners = (SubMatrix)calloc(1, sizeof(submatrix));
-	// corners->tox = x - 1;
-	// corners->toy = y - 1;
-	// key[0]=799;
-	printf("FOR STARTING\n");
 	double start = omp_get_wtime();
 	for (k = 0; k < itr; k++)
 	{
@@ -51,7 +46,6 @@ int main(int argc, char **argv)
 			num++;
 			temp = temp / 2;
 		}
-		// printf("num %d \n", num);
 		unsigned int width = 1;
 		width = width << num;
 		// printf("width %d \n", width);
@@ -62,40 +56,36 @@ int main(int argc, char **argv)
 		{
 			for (int j = 0; j < width; j++)
 			{
-
-				// if((i*x+j)%1000000 == 0){
-
-				// }
 				if(answerflg==1) {
 #pragma omp cancel for
 				// continue;
-					}else{
-				int fromx = i * size, fromy = j * size, tox = (1 + i) * size - 1, toy = (1 + j) * size - 1;
-				// printf("%d %d %d %d\n", fromx, tox, fromy, toy);
-				if (mat[fromx][fromy] > key[k] || mat[tox][toy] < key[k])
-				{
-					continue;
 				}
-				else
-				{
-					SubMatrix corners = (SubMatrix)malloc(sizeof(submatrix));
-					corners->fromx = fromx;
-					corners->tox = tox;
-					corners->fromy = fromy;
-					corners->toy = toy;
-					search(mat, corners, key[k]);
-					free(corners);
-				}}
-				//parallelize this code here
+				else{
+					int fromx = i * size, fromy = j * size, tox = (1 + i) * size - 1, toy = (1 + j) * size - 1;
+					// printf("%d %d %d %d\n", fromx, tox, fromy, toy);
+					if (mat[fromx][fromy] > key[k] || mat[tox][toy] < key[k])
+					{
+						continue;
+					}
+					else
+					{
+						SubMatrix corners = (SubMatrix)malloc(sizeof(submatrix));
+						corners->fromx = fromx;
+						corners->tox = tox;
+						corners->fromy = fromy;
+						corners->toy = toy;
+						search(mat, corners, key[k]);
+						free(corners);
+					}
+				}
 			}
 			//IMPORTANT: no code in here
 		}
 		if (answerflg == 1)
 		{
-			// printf("X-Index: %d\t Y-Index: %d\n", answer->x, answer->y);
 			answerflg=0;
 		// if (key[k] != mat[answer->x][answer->y])
-		// 	printf("%d %d\n", key[k], mat[answer->x][answer->y]);
+			// printf("%d %d\n",answer->x,answer->y);
 		}
 		else
 		{
@@ -104,23 +94,12 @@ int main(int argc, char **argv)
 		free(answer);
 	}
 	double end = omp_get_wtime();
-	// free(corners);
 	for (i = 0; i < x; i++)
 	{
 		free(mat[i]);
 	}
 	free(mat);
-
 	printf("Time : %f\n\n", end - start);
-	// if (answerflg == 1)
-	// {
-	// 	printf("X-Index: %d\t Y-Index: %d\n", answer->x, answer->y);
-	// 	printf("%d %d\n", key, mat[answer->x][answer->y]);
-	// }
-	// else
-	// {
-	// 	printf("FAILED \n");
-	// }
 	return 0;
 }
 
@@ -131,7 +110,6 @@ void search(int **mat, SubMatrix corners, int key)
 	{
 		if (mat[i][j] == key)
 		{
-			// printf("key Found at %d, %d", i, j);
 			answerflg = 1;
 			answer = (Pos)malloc(sizeof(pos));
 			answer->x = i;
@@ -140,18 +118,8 @@ void search(int **mat, SubMatrix corners, int key)
 		}
 		if (mat[i][j] > key)
 			j--;
-		else //  if mat[i][j] < x
+		else
 			i++;
 	}
 	return;
 }
-
-// SubMatrix makecopy(SubMatrix m)
-// {
-// 	SubMatrix n = (SubMatrix)malloc(sizeof(submatrix));
-// 	n->fromx = m->fromx;
-// 	n->tox = m->tox;
-// 	n->fromy = m->fromy;
-// 	n->toy = m->toy;
-// 	return n;
-// }
