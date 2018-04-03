@@ -46,6 +46,7 @@ typedef heaphead *HeapHead;
 extern map<string, countindex> global_dict;
 extern HeapHead global_heap;
 extern int conf;
+extern trieNode stoproot;
 
 HeapHead InitialiseHead(int k);
 

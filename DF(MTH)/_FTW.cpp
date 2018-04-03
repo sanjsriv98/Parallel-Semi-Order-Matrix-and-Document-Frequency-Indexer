@@ -3,30 +3,17 @@
 
 HeapHead global_heap;
 trieNode root;
+trieNode stoproot;
 int conf;
 omp_lock_t heaplock;
 omp_lock_t letterlocks[27][26];
-inline long current_time_usecs() __attribute__((always_inline));
-inline long current_time_usecs()
-{
-    struct timeval t;
-    gettimeofday(&t, NULL);
-    return (t.tv_sec) * 1000000L + t.tv_usec;
-}
-
-inline long current_time_nsecs() __attribute__((always_inline));
-inline long current_time_nsecs()
-{
-    struct timespec t;
-    clock_gettime(CLOCK_REALTIME, &t);
-    return (t.tv_sec) * 1000000000L + t.tv_nsec;
-}
 
 int main(int argc, char *argv[])
 {
-    long start_t = current_time_usecs();
-
-    int i, j, k = 10;
+    stoproot = getNode();
+    double start = omp_get_wtime();
+    int i, j, k = 100;
+#pragma omp parallel for private(i, j)
     for (i = 0; i < 27; i++)
     {
         for (j = 0; j < 26; j++)
@@ -38,29 +25,116 @@ int main(int argc, char *argv[])
     root = getNode();
     int flags = FTW_DEPTH | FTW_PHYS;
     global_heap = InitialiseHead(k);
+    makestopwords("./stopwords");
+
 #pragma omp parallel
 #pragma omp single
     {
         if (argc == 1)
-            nftw(".", fileproc, 1, flags);
+            filetreewalk("."); // nftw(".", fileproc, 1, flags);
         else
-            nftw(argv[1], fileproc, 1, flags);
+            filetreewalk(argv[1]); // nftw(argv[1], fileproc, 1, flags);
     }
-    long end_t = current_time_usecs();
+    printf("TREEWALK COMPLETE %f\n", omp_get_wtime() - start);
 
+    // heapSort(global_heap);
+    // char *s = (char *)malloc(sizeof(char));
+    // s[0] = '\0';
+    string s;
+    traverse2(s, root);
     heapSort(global_heap);
-    printf("Time (usecs): %ld\nTime (msecs): %ld\n", end_t - start_t, (end_t - start_t) / 1000);
-    // std::string s;
-    // traverse(s, root);
+    // long end_t = current_time_usecs();
+    double end = omp_get_wtime();
+
+    for (j = 0; j < global_heap->size; j++)
+    {
+        cout << global_heap->arr[j].word << "\t" << global_heap->arr[j].count << "\n";
+    }
+    printf("Time : %f\n", end - start);
     return 0;
 }
 
-int fileproc(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf)
-{
-    char *temp = (char *)malloc(sizeof(char) * (1 + strlen(fpath)));
-    strcpy(temp, fpath);
-    // #pragma omp task
-    fill_dict(temp);
+// int fileproc(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf)
+// {
+//     char *temp = (char *)malloc(sizeof(char) * (1 + strlen(fpath)));
+//     strcpy(temp, fpath);
+//     // #pragma omp task
+//     fill_dict(temp);
 
-    return 0;
-};
+//     return 0;
+// };
+
+char *target(char *a, char *b)
+{
+    char *targetdir = (char *)malloc((2 + strlen(a) + strlen(b)) * sizeof(char));
+    strcpy(targetdir, a);
+    strcat(targetdir, "/");
+    strcat(targetdir, b);
+    free(b);
+    free(a);
+    return targetdir;
+}
+
+void filetreewalk(const char *root)
+{
+    DIR *FD;
+    struct dirent *in_file;
+    // struct dirent** chils;
+    // FILE    *output_file;
+    FILE *entry_file;
+    char *inputfile, *rootcopy;
+    // int res=1;
+    if (NULL == (FD = opendir(root)))
+    {
+        fprintf(stderr, "Error : Failed to open input directory %s\n", root);
+        return;
+    }
+    while ((in_file = readdir(FD)))
+    {
+        if (!strcmp(in_file->d_name, "."))
+            continue;
+        if (!strcmp(in_file->d_name, ".."))
+            continue;
+        if (in_file->d_type == DT_DIR)
+        {
+            inputfile = (char *)malloc((strlen(in_file->d_name) + 1) * sizeof(char));
+            rootcopy = (char *)malloc((strlen(root) + 1) * sizeof(char));
+            strcpy(rootcopy, root);
+            strcpy(inputfile, in_file->d_name);
+// cout <<inputfile << "\n";
+#pragma omp task //shared(hashLocks) //private(inputfile,rootcopy)
+            {
+                inputfile = target(rootcopy, inputfile);
+                filetreewalk(inputfile);
+                free(inputfile); //;free(rootcopy);
+            }
+            // #pragma omp taskwait
+        }
+        else if (in_file->d_type == DT_REG)
+        {
+            inputfile = (char *)malloc((strlen(in_file->d_name) + 1) * sizeof(char));
+            rootcopy = (char *)malloc((strlen(root) + 1) * sizeof(char));
+            strcpy(rootcopy, root);
+            strcpy(inputfile, in_file->d_name);
+// cout << target(rootcopy,inputfile) << "\n";
+#pragma omp task //shared(hashLocks) //   private(inputfile,rootcopy)
+            {
+                inputfile = target(rootcopy, inputfile);
+                fill_dict(inputfile);
+                // free(inputfile); //free(rootcopy);
+            }
+            // #pragma omp taskwait
+        }
+        else
+        {
+            fprintf(stderr, "Error : unknown file type %s\n", in_file->d_name);
+        }
+        // if((res = readdir_r(FD,in_file,chils))!=0){
+        //     fprintf(stderr, "Error : Failed to open directory %s\n",in_file->d_name);
+        // }
+    }
+#pragma omp taskwait
+    closedir(FD);
+    //
+    return;
+}

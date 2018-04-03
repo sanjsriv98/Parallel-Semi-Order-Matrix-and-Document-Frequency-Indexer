@@ -42,7 +42,7 @@ void swap(HeapHead heap, int a, int b)
     heapnode temp;
     if (heap->arr[a].triePtr)
     {
-        heap->arr[a].triePtr->index = b;
+        // heap->arr[a].triePtr->index = b;
         temp.triePtr = heap->arr[a].triePtr;
         temp.count = heap->arr[a].count;
         temp.word = heap->arr[a].word;
@@ -51,11 +51,12 @@ void swap(HeapHead heap, int a, int b)
     {
         temp.triePtr = NULL;
         temp.count = 0;
-        temp.word = "";
+        if (!temp.word.empty())
+            temp.word.clear();
     }
     if (heap->arr[b].triePtr)
     {
-        heap->arr[b].triePtr->index = a;
+        // heap->arr[b].triePtr->index = a;
         heap->arr[a].triePtr = heap->arr[b].triePtr;
         heap->arr[a].count = heap->arr[b].count;
         heap->arr[a].word = heap->arr[b].word;
@@ -64,7 +65,8 @@ void swap(HeapHead heap, int a, int b)
     {
         heap->arr[a].triePtr = NULL;
         heap->arr[a].count = 0;
-        heap->arr[a].word = "";
+        if (!heap->arr[a].word.empty())
+            heap->arr[a].word.clear();
     }
     if (temp.triePtr)
     {
@@ -76,7 +78,8 @@ void swap(HeapHead heap, int a, int b)
     {
         heap->arr[b].triePtr = NULL;
         heap->arr[b].count = 0;
-        heap->arr[b].word = "";
+        if (!heap->arr[b].word.empty())
+            heap->arr[b].word.clear();
     }
 }
 
@@ -90,10 +93,10 @@ void heapSort(HeapHead heap)
         size--;
         minHeapify(heap, size - 1, 0);
     }
-    for (j = 0; j < heap->size; j++)
-    {
-        cout << heap->arr[j].word << "\t" << heap->arr[j].count << "\n";
-    }
+    // for (j = 0; j < heap->size; j++)
+    // {
+    //     cout << heap->arr[j].word << "\t" << heap->arr[j].count << "\n";
+    // }
 }
 
 void lock(char *token)

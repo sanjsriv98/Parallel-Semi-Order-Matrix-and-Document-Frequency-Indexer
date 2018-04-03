@@ -1,14 +1,18 @@
 // #include <stdio.h>
 #include "_Dict.h"
 
-char *isalphabet(char *temp)
-{
-	char *p;
-	for (p = temp; *p; ++p)
-		if (!isalpha(*p))
-			*p = ' ';
-	return temp;
-}
+// char *isalphabet(char *temp)
+// {
+// 	char *p;
+// 	for (p = temp; *p; ++p)
+// 		if (!isalpha(*p))
+// 			*p = ' ';
+// 		else
+// 		{
+// 			*p = tolower(*p);
+// 		}
+// 	return temp;
+// }
 
 void fill_dict(char *docName)
 {
@@ -38,8 +42,10 @@ void fill_dict(char *docName)
 			token = strtok_r(str1, "  \n\t", &saveptr1);
 			if (token == NULL)
 				break;
-			for (p = token; *p; ++p)
-				*p = tolower(*p);
+			// for (p = token; *p; ++p)
+			// 	*p = tolower(*p);
+			if (search(stoproot, token))
+				continue;
 			itr = local_dict.find(token);
 
 			if (itr == local_dict.end())

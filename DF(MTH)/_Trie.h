@@ -31,10 +31,12 @@ typedef TrieNode *trieNode;
 extern trieNode root;
 
 #include "_MinHeap.h"
-
+char *isalphabet(char *temp);
 trieNode getNode(void);
 void insert(trieNode root, char *key);
-void traverse(std::string &prefix, trieNode node);
+void traverse(char *prefix, trieNode node);
+void traverse2(std::string &prefix, trieNode node);
+int search(trieNode root, const char *key);
+void makestopwords(const char *docName);
 
-// int search(trieNode root, const char *key);
 #endif
