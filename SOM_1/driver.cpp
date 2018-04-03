@@ -27,10 +27,11 @@ int main(int argc, char **argv)
 		}
 	}
 	printf("READING COMPLETE\n");
-	int itr = 600;
-	int key[itr]; // = mat[99][99];
+	int itr = x*10;
+	int* key=(int*)malloc(itr*sizeof(int)); // = mat[99][99];
 	srand(time(0));
 	int upperbound = x * y;
+	// #pragma omp parallel for
 	for (i = 0; i < itr; i++)
 		key[i] = (rand()) % (upperbound);
 	// printf("key: %d\n", key);
@@ -38,6 +39,7 @@ int main(int argc, char **argv)
 	// SubMatrix corners = (SubMatrix)calloc(1, sizeof(submatrix));
 	// corners->tox = x - 1;
 	// corners->toy = y - 1;
+	// key[0]=799;
 	printf("FOR STARTING\n");
 	double start = omp_get_wtime();
 	for (k = 0; k < itr; k++)
@@ -54,11 +56,20 @@ int main(int argc, char **argv)
 		width = width << num;
 		// printf("width %d \n", width);
 		int size = temp;
-#pragma omp parallel for schedule(dynamic, 1) collapse(2)
+#pragma omp parallel 
+#pragma omp for schedule(dynamic, 1) collapse(2)
 		for (int i = 0; i < width; i++)
 		{
 			for (int j = 0; j < width; j++)
 			{
+
+				// if((i*x+j)%1000000 == 0){
+
+				// }
+				if(answerflg==1) {
+#pragma omp cancel for
+				// continue;
+					}else{
 				int fromx = i * size, fromy = j * size, tox = (1 + i) * size - 1, toy = (1 + j) * size - 1;
 				// printf("%d %d %d %d\n", fromx, tox, fromy, toy);
 				if (mat[fromx][fromy] > key[k] || mat[tox][toy] < key[k])
@@ -74,21 +85,22 @@ int main(int argc, char **argv)
 					corners->toy = toy;
 					search(mat, corners, key[k]);
 					free(corners);
-				}
+				}}
 				//parallelize this code here
 			}
 			//IMPORTANT: no code in here
 		}
-		// if (answerflg == 1)
-		// {
-		// 	printf("X-Index: %d\t Y-Index: %d\n", answer->x, answer->y);
-		if (key[k] != mat[answer->x][answer->y])
-			printf("%d %d\n", key[k], mat[answer->x][answer->y]);
-		// }
-		// else
-		// {
-		// 	printf("FAILED \n");
-		// }
+		if (answerflg == 1)
+		{
+			// printf("X-Index: %d\t Y-Index: %d\n", answer->x, answer->y);
+			answerflg=0;
+		// if (key[k] != mat[answer->x][answer->y])
+		// 	printf("%d %d\n", key[k], mat[answer->x][answer->y]);
+		}
+		else
+		{
+			printf("FAILED %d\n",key[k]);
+		}
 		free(answer);
 	}
 	double end = omp_get_wtime();
