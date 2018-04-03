@@ -43,7 +43,7 @@ void filetreewalk(const char *root){
             rootcopy=(char*)malloc((strlen(root)+1)*sizeof(char));
             strcpy(rootcopy,root);
             strcpy(inputfile,in_file->d_name);
-            // cout << target(rootcopy,inputfile) << "\n";
+            // cout <<inputfile << "\n";
             #pragma omp task //shared(hashLocks) //private(inputfile,rootcopy)
             {
                 inputfile=target(rootcopy,inputfile);
@@ -108,6 +108,7 @@ int main(int argc, char *argv[])
     else{
         // #pragma omp task
         // nftw(argv[3], fileproc, 1, flags);
+        // cout << argv[3] << "\n";
         filetreewalk(argv[3]);
     }
     // #pragma omp taskwait
