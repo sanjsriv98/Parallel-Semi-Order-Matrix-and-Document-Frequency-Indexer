@@ -31,19 +31,14 @@ int main(int argc, char *argv[])
 #pragma omp single
     {
         if (argc == 1)
-            filetreewalk("."); // nftw(".", fileproc, 1, flags);
+            filetreewalk("."); 
         else
-            filetreewalk(argv[1]); // nftw(argv[1], fileproc, 1, flags);
+            filetreewalk(argv[1]);
     }
     printf("TREEWALK COMPLETE %f\n", omp_get_wtime() - start);
-
-    // heapSort(global_heap);
-    // char *s = (char *)malloc(sizeof(char));
-    // s[0] = '\0';
     string s;
     traverse2(s, root);
     heapSort(global_heap);
-    // long end_t = current_time_usecs();
     double end = omp_get_wtime();
 
     for (j = 0; j < global_heap->size; j++)
@@ -53,16 +48,6 @@ int main(int argc, char *argv[])
     printf("Time : %f\n", end - start);
     return 0;
 }
-
-// int fileproc(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf)
-// {
-//     char *temp = (char *)malloc(sizeof(char) * (1 + strlen(fpath)));
-//     strcpy(temp, fpath);
-//     // #pragma omp task
-//     fill_dict(temp);
-
-//     return 0;
-// };
 
 char *target(char *a, char *b)
 {
@@ -79,11 +64,8 @@ void filetreewalk(const char *root)
 {
     DIR *FD;
     struct dirent *in_file;
-    // struct dirent** chils;
-    // FILE    *output_file;
     FILE *entry_file;
     char *inputfile, *rootcopy;
-    // int res=1;
     if (NULL == (FD = opendir(root)))
     {
         fprintf(stderr, "Error : Failed to open input directory %s\n", root);
@@ -101,8 +83,7 @@ void filetreewalk(const char *root)
             rootcopy = (char *)malloc((strlen(root) + 1) * sizeof(char));
             strcpy(rootcopy, root);
             strcpy(inputfile, in_file->d_name);
-// cout <<inputfile << "\n";
-#pragma omp task //shared(hashLocks) //private(inputfile,rootcopy)
+#pragma omp task 
             {
                 inputfile = target(rootcopy, inputfile);
                 filetreewalk(inputfile);
@@ -116,12 +97,10 @@ void filetreewalk(const char *root)
             rootcopy = (char *)malloc((strlen(root) + 1) * sizeof(char));
             strcpy(rootcopy, root);
             strcpy(inputfile, in_file->d_name);
-// cout << target(rootcopy,inputfile) << "\n";
-#pragma omp task //shared(hashLocks) //   private(inputfile,rootcopy)
+#pragma omp task
             {
                 inputfile = target(rootcopy, inputfile);
                 fill_dict(inputfile);
-                // free(inputfile); //free(rootcopy);
             }
             // #pragma omp taskwait
         }
@@ -129,12 +108,8 @@ void filetreewalk(const char *root)
         {
             fprintf(stderr, "Error : unknown file type %s\n", in_file->d_name);
         }
-        // if((res = readdir_r(FD,in_file,chils))!=0){
-        //     fprintf(stderr, "Error : Failed to open directory %s\n",in_file->d_name);
-        // }
     }
 #pragma omp taskwait
     closedir(FD);
-    //
     return;
 }

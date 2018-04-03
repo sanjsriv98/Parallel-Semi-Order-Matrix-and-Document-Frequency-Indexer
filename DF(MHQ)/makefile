@@ -1,5 +1,5 @@
 run: exe
-	./exe
+	./exe 10 4
 
 gdb: exe
 	gdb exe

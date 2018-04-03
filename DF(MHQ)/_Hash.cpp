@@ -103,7 +103,6 @@ void insertWord(char* str,int h){
 	return;
 }
 void fill_ht(char* docName){
-	// cout << docName << "\n";
 	FILE* entry_file = fopen(docName, "r");
 
 	if (entry_file == NULL)
@@ -123,7 +122,6 @@ void fill_ht(char* docName){
 			token = strtok_r(str1,"  \n\t", &saveptr1);
 			if (token == NULL)
 				break;
-			// for ( p=token; *p; ++p) *p = tolower(*p);
 			h = myhash(token);	
 			if(checkStopWord(token,h)==1) continue;
 			itr = local_dict.find(token);
@@ -131,11 +129,7 @@ void fill_ht(char* docName){
 			if (itr == local_dict.end())
 			{
 				local_dict[token] = 1;
-				// h = myhash(token);
-				// cout << "lock is "<< h << "\n";
 				omp_set_lock(&hashLocks[h]);
-				// cout << "hvhgghhh" << h<<"\n";
-
 				insertWord(token,h);
 				omp_unset_lock(&hashLocks[h]);
 			}
@@ -178,12 +172,9 @@ wordCount fillarray(){
 	wordCount arr =(wordCount)malloc(sizeof(wordcount)*ht[M-1].cf);
 	int i=0,j=0;
 	wordList temp,prev;
-	// #pragma omp parallel shared(arr)
-	// #pragma omp for  private(j,temp,prev)
 	#pragma omp parallel for schedule(dynamic) private(j,temp,prev)
 	for(i=0;i<M;i++)
 	{	
-		// ht[i].size>0 ? cout << i<<"\t"<<ht[i].size << "\n" : cout << ""; 
 		temp=ht[i].head;
 		for(j=0;j<ht[i].size;j++){
 			arr[ht[i].cf-ht[i].size+j].count =temp->wc->count;
@@ -192,21 +183,12 @@ wordCount fillarray(){
 			temp=temp->next;
 			free(prev->wc);
 			free(prev);
-			// cout << ht[i].size<<arr[ht[i].cf-ht[i].size+j].wordName << "\tinside\t" << arr[ht[i].cf-ht[i].size+j].count << "\n";	
 		}
-		// cout << "\n";
 	}
 	free(ht);
-	// printArray(arr,ht[m-1].cf);
 	return arr;
 }
 
-
-// void omp_set_lock(omp_lock_t *lock){return;}
-
-// void omp_unset_lock(omp_lock_t *lock){return;}
-
-// void omp_init_lock(omp_lock_t *lock){return;}
 
 void makeStopWords(const char* fname){
 	sht = (stopWord*)malloc(M*sizeof(stopWord));
@@ -219,7 +201,6 @@ void makeStopWords(const char* fname){
 	{
 		fprintf(stderr, "Error : Failed to open entry file\n");
 		return ;
-		// return 1;
 	}
 	char * line = NULL,*saveptr1,*str1,*token,*p;
 	size_t len = 0;
@@ -233,7 +214,6 @@ void makeStopWords(const char* fname){
 			token = strtok_r(str1," \n\t", &saveptr1);
 			if (token == NULL)
 				break;
-			// for ( p=token; *p; ++p) *p = tolower(*p);
 			k=myhash(token);
 			key=(char*)malloc(sizeof(char)*(strlen(token)+1));
 			strcpy(key,token);
@@ -241,8 +221,6 @@ void makeStopWords(const char* fname){
 			temp->key=key;
 			temp->next=sht[k];
 			sht[k]=temp;
-			// ht[k]=(token,ht[k]);
-			
 		}
 	}
 	fclose(fp);
