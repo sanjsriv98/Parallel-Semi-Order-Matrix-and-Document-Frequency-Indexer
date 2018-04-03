@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 		}
 	}
 	printf("READING COMPLETE\n");
-	int itr = 600;
+	int itr = x*10;
 	int key[itr];//[itr]; // = mat[99][99];
 	scanf("%d", &key[0]);
 	srand(time(0));	
@@ -111,15 +111,17 @@ void search(int **mat, SubMatrix corners, int key)
 	}else if (((corners->tox - corners->fromx) <4) || ((corners->toy - corners->fromy)<4)){
 		if(key<mat[corners->fromx][corners->fromy]||key>mat[corners->tox][corners->toy])free(middle);
 		else 
-		{search2(mat,corners,key);
-		free(middle);
-		free(corners);}
+		{
+			search2(mat,corners,key);
+			free(middle);
+			free(corners);
+		}
 	}
 	else if(middle->y == corners->fromy&&key<mat[middle->x][middle->y]){
 		SubMatrix quadrant1 = makecopy(corners);
 		free(corners);
 		quadrant1->tox = middle->x;
-		// #pragma omp task
+		#pragma omp task
 		{
 			if(!answerflg){
 				search(mat,quadrant1,key);
@@ -134,7 +136,7 @@ void search(int **mat, SubMatrix corners, int key)
 		SubMatrix quadrant2 = makecopy(corners);
 		quadrant2->fromx = middle->x;
 		free(corners);
-		// #pragma omp task
+		#pragma omp task
 		{
 			if(!answerflg){
 				search(mat,quadrant2,key);
@@ -149,7 +151,7 @@ void search(int **mat, SubMatrix corners, int key)
 		SubMatrix quadrant3 = makecopy(corners);
 		quadrant3->fromx=middle->x+1;
 		quadrant3->toy = middle->y;
-		// #pragma omp task
+		#pragma omp task
 		{
 			if(!answerflg){
 				search(mat,quadrant3,key);
@@ -162,7 +164,7 @@ void search(int **mat, SubMatrix corners, int key)
 		quadrant4->tox = middle->x;
 		quadrant4->fromy = middle->y;
 		free(corners);
-		// #pragma omp task
+		#pragma omp task
 		{
 			if(!answerflg){
 				search(mat,quadrant4,key);

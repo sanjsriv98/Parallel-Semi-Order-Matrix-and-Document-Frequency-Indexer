@@ -1,5 +1,5 @@
-run: exe2
-	./exe2 4 < input4
+run: exe
+	./exe 4 < input4
 
 run2: exe
 	./exe 1 < input2
@@ -45,14 +45,14 @@ run5: exe
 gdb: exe
 	gdb ./exe
 
-exe: driver.o
+exe2: driver.o
 	g++ -g driver.o -o exe -fopenmp
 
 driver.o : driver.cpp semiorder.h
 	g++ -c -g driver.cpp -fopenmp
 
-exe2: driver2.o
-	g++ -g driver2.o -o exe2 -fopenmp
+exe: driver2.o
+	g++ -g driver2.o -o exe -fopenmp
 
 driver2.o : driver2.cpp semiorder.h
 	g++ -c -g driver2.cpp -fopenmp
