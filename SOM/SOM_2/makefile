@@ -45,11 +45,11 @@ run4: exe
 	./exe 2 < ../input4
 	./exe 4 < ../input4
 	./exe 8 < ../input4
-	./exe 16 < ../input4
-	./exe 32 < ../input4
-	./exe 48 < ../input4
-	./exe 64 < ../input4
-	./exe 96 < ../input4
+	# ./exe 16 < ../input4
+	# ./exe 32 < ../input4
+	# ./exe 48 < ../input4
+	# ./exe 64 < ../input4
+	# ./exe 96 < ../input4
 
 run5: exe
 	./exe 1 < ../input5
