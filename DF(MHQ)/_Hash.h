@@ -25,49 +25,50 @@ using namespace std;
 #define MAX_NUM 99999.9
 #define M 50000
 
+typedef struct wordcount
+{
+	int count;
+	char *wordName;
+} wordcount;
 
-typedef struct wordcount{
-    int count;
-    char* wordName;
-}wordcount;
-
-typedef wordcount* wordCount;
+typedef wordcount *wordCount;
 
 typedef struct stopword
 {
-	char* key;
-	struct stopword* next;
-}stopword;
+	char *key;
+	struct stopword *next;
+} stopword;
 
-typedef stopword* stopWord;
+typedef stopword *stopWord;
 
 typedef struct wordlist
 {
 	wordCount wc;
-	struct wordlist* next;
-}wordlist;
+	struct wordlist *next;
+} wordlist;
 
-typedef wordlist* wordList;
+typedef wordlist *wordList;
 
-typedef struct hashtable{
+typedef struct hashtable
+{
 	wordList head;
 	int size;
-	int cf; 
-}hashtable;
+	int cf;
+} hashtable;
 
-typedef hashtable* hashTable;
+typedef hashtable *hashTable;
 
-extern hashTable ht ;
+extern hashTable ht;
 extern omp_lock_t hashLocks[M];
-extern stopWord* sht;
+extern stopWord *sht;
 
-void fill_ht(char* docName);
-char* isalphabet(char* temp);
+void fill_ht(char *docName);
+char *isalphabet(char *temp);
 int myhash(char *str);
 void createEmptyHT();
-void insertWord(char* str,int h);
+void insertWord(char *str, int h);
 void printHT();
 void fillCumFreq();
 wordCount fillarray();
-void makeStopWords(const char* fname);
-int checkStopWord(char* key,int hash);
+void makeStopWords(const char *fname);
+int checkStopWord(char *key, int hash);
