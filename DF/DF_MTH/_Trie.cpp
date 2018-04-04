@@ -136,8 +136,9 @@ void traverse2(std::string &prefix, trieNode node)
         omp_unset_lock(&heaplock);
         conf = global_heap->arr[0].count;
     }
-#pragma omp for
-    for (char index = 0; index < 26; ++index)
+    char index;
+#pragma omp for private(index)
+    for (index = 0; index < 26; ++index)
     {
         char next = 'a' + index;
         trieNode pChild = node->children[index];
@@ -148,7 +149,7 @@ void traverse2(std::string &prefix, trieNode node)
             traverse2(temp, pChild);
             // prefix.pop_back();
         }
-#pragma omp cancel for
+        // #pragma omp cancel for
     }
     free(node);
 }

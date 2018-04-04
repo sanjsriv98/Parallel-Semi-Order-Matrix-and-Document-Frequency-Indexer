@@ -49,11 +49,12 @@ int main(int argc, char **argv)
 		width = width << num;
 		// printf("width %d \n", width);
 		int size = temp;
+		int i, j;
 #pragma omp parallel num_threads(nwork)
-#pragma omp for schedule(dynamic, 1) collapse(2)
-		for (int i = 0; i < width; i++)
+#pragma omp for schedule(dynamic, 1) collapse(2) private(i, j)
+		for (i = 0; i < width; i++)
 		{
-			for (int j = 0; j < width; j++)
+			for (j = 0; j < width; j++)
 			{
 				if (answerflg == 1)
 				{
