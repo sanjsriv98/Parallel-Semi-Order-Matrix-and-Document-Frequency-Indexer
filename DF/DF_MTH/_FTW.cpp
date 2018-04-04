@@ -21,7 +21,7 @@ int main(int argc, char **argv)
     int num_elem = atoi(argv[1]);
     int nwork = atoi(argv[2]);
     stoproot = getNode();
-    makestopwords("./stopwords");
+    makestopwords("../stopwords");
     double start = omp_get_wtime();
     int i, j, k = num_elem;
 #pragma omp parallel for private(i, j) num_threads(nwork)

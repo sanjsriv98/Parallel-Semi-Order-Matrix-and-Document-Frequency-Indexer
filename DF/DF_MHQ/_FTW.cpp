@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
     int num_elem = atoi(argv[1]);
     int nwork = atoi(argv[2]);
     double start = omp_get_wtime();
-    makeStopWords("./stopwords");
+    makeStopWords("../stopwords");
     int i = 0;
     for (i = 0; i < M; i++)
     {

@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
     }
     int num_elem = atoi(argv[1]);
     int nwork = atoi(argv[2]);
-    makeStopWords("./stopwords");
+    makeStopWords("../stopwords");
     double start = omp_get_wtime();
     createEmptyHT();
     // int flags = FTW_DEPTH | FTW_PHYS;
