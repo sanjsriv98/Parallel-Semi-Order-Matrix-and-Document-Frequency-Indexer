@@ -50,7 +50,7 @@ int main(int argc, char **argv)
 		width = width << num;
 		// printf("width %d \n", width);
 		int size = temp;
-#pragma omp parallel 
+#pragma omp parallel num_threads(nwork)
 #pragma omp for schedule(dynamic, 1) collapse(2)
 		for (int i = 0; i < width; i++)
 		{

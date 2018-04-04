@@ -48,7 +48,7 @@ int main(int argc, char **argv)
 		corners = (SubMatrix)calloc(1, sizeof(submatrix));
 		corners->tox = x - 1;
 		corners->toy = y - 1;
-#pragma omp parallel
+#pragma omp parallel num_threads(nwork)
 #pragma omp single
 		search(mat, corners, key[i]);
 		if (answerflg == 1)
