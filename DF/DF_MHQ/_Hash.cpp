@@ -47,7 +47,8 @@ void insertWord(char *str, int h)
 	wordList prev = NULL;
 	if (strcmp(temp->wc->wordName, str) == 0)
 	{
-		temp->wc->count += 1;
+#pragma omp atomic
+		temp->wc->count++;
 		return;
 	}
 	if (strcmp(temp->wc->wordName, str) > 0)
@@ -80,7 +81,8 @@ void insertWord(char *str, int h)
 	{
 		if (strcmp(temp->wc->wordName, str) == 0)
 		{
-			temp->wc->count += 1;
+#pragma omp atomic
+			temp->wc->count++;
 			return;
 		}
 		if (strcmp(temp->wc->wordName, str) > 0)
@@ -106,6 +108,7 @@ void insertWord(char *str, int h)
 	wordList wl = (wordList)malloc(sizeof(wordlist));
 	wl->wc = newWord;
 	wl->next = NULL;
+
 	ht[h].size += 1;
 	temp->next = wl;
 	return;

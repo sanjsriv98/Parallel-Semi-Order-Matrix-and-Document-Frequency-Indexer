@@ -70,4 +70,4 @@ inputmat5:
 	python makeSOM.py > input5
 
 clean:
-	rm exe *.o
+	rm ex* *.o

@@ -29,10 +29,10 @@ int main(int argc, char **argv)
 		}
 	}
 	printf("READING COMPLETE\n");
-	int itr = x*10;
-	int key[itr];//[itr]; // = mat[99][99];
+	int itr = x;
+	int key[itr]; //[itr]; // = mat[99][99];
 	scanf("%d", &key[0]);
-	srand(time(0));	
+	srand(time(0));
 	// key =(rand()) % (x*y);
 	int upperbound = x * y;
 	for (i = 0; i < itr; i++)
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 		}
 		else
 		{
-			printf("FAILED key %d\n",key[i]);
+			printf("FAILED key %d\n", key[i]);
 		}
 		// free(corners);
 	}
@@ -75,19 +75,24 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-int binarySearch(int* arr,int lo,int hi,int x){
-	int i,mid=(lo+hi)/2;
-	while(lo<=mid&&lo<hi){
-		if(arr[mid]==x){
+int binarySearch(int *arr, int lo, int hi, int x)
+{
+	int i, mid = (lo + hi) / 2;
+	while (lo <= mid && lo < hi)
+	{
+		if (arr[mid] == x)
+		{
 			return mid;
 		}
-		else if(arr[mid]>x){
-			hi=mid;
+		else if (arr[mid] > x)
+		{
+			hi = mid;
 		}
-		else{
-			lo=mid+1;
+		else
+		{
+			lo = mid + 1;
 		}
-		mid = (lo+hi)/2;
+		mid = (lo + hi) / 2;
 	}
 	return lo;
 }
@@ -99,8 +104,9 @@ void search(int **mat, SubMatrix corners, int key)
 	// }
 	Pos middle = (Pos)malloc(sizeof(pos));
 	middle->x = (corners->fromx + corners->tox) / 2;
-	middle->y = binarySearch(mat[middle->x],corners->fromy,corners->toy,key);
-	if(mat[middle->x][middle->y] == key){
+	middle->y = binarySearch(mat[middle->x], corners->fromy, corners->toy, key);
+	if (mat[middle->x][middle->y] == key)
+	{
 		answerflg = 1;
 		answer = middle;
 		double answertime = omp_get_wtime();
@@ -108,55 +114,67 @@ void search(int **mat, SubMatrix corners, int key)
 		// printf("%d %d\n", middle->x, middle->y);
 		free(corners);
 		return;
-	}else if (((corners->tox - corners->fromx) <4) || ((corners->toy - corners->fromy)<4)){
-		if(key<mat[corners->fromx][corners->fromy]||key>mat[corners->tox][corners->toy])free(middle);
-		else 
+	}
+	else if (((corners->tox - corners->fromx) < 4) || ((corners->toy - corners->fromy) < 4))
+	{
+		if (key < mat[corners->fromx][corners->fromy] || key > mat[corners->tox][corners->toy])
+			free(middle);
+		else
 		{
-			search2(mat,corners,key);
+			search2(mat, corners, key);
 			free(middle);
 			free(corners);
 		}
 	}
-	else if(middle->y == corners->fromy&&key<mat[middle->x][middle->y]){
+	else if (middle->y == corners->fromy && key < mat[middle->x][middle->y])
+	{
 		SubMatrix quadrant1 = makecopy(corners);
 		free(corners);
 		quadrant1->tox = middle->x;
-		#pragma omp task
+#pragma omp task
 		{
-			if(!answerflg){
-				search(mat,quadrant1,key);
+			if (!answerflg)
+			{
+				search(mat, quadrant1, key);
 			}
-			else{
+			else
+			{
 				free(quadrant1);
 			}
 		}
 		free(middle);
 	}
-	else if(middle->y == corners->toy&&key>mat[middle->x][middle->y]){
+	else if (middle->y == corners->toy && key > mat[middle->x][middle->y])
+	{
 		SubMatrix quadrant2 = makecopy(corners);
 		quadrant2->fromx = middle->x;
 		free(corners);
-		#pragma omp task
+#pragma omp task
 		{
-			if(!answerflg){
-				search(mat,quadrant2,key);
+			if (!answerflg)
+			{
+				search(mat, quadrant2, key);
 			}
-			else{
+			else
+			{
 				free(quadrant2);
 			}
 		}
 		free(middle);
 	}
-	else{
+	else
+	{
 		SubMatrix quadrant3 = makecopy(corners);
-		quadrant3->fromx=middle->x+1;
+		quadrant3->fromx = middle->x + 1;
 		quadrant3->toy = middle->y;
-		#pragma omp task
+#pragma omp task
 		{
-			if(!answerflg){
-				search(mat,quadrant3,key);
+			if (!answerflg)
+			{
+				search(mat, quadrant3, key);
 			}
-			else{
+			else
+			{
 				free(quadrant3);
 			}
 		}
@@ -164,12 +182,14 @@ void search(int **mat, SubMatrix corners, int key)
 		quadrant4->tox = middle->x;
 		quadrant4->fromy = middle->y;
 		free(corners);
-		#pragma omp task
+#pragma omp task
 		{
-			if(!answerflg){
-				search(mat,quadrant4,key);
+			if (!answerflg)
+			{
+				search(mat, quadrant4, key);
 			}
-			else{
+			else
+			{
 				free(quadrant4);
 			}
 		}
@@ -177,8 +197,7 @@ void search(int **mat, SubMatrix corners, int key)
 	}
 	return;
 	// printf("%d %d\n", middle->x, middle->y);
-//==========================-------------------------------------------
-	
+	//==========================-------------------------------------------
 }
 
 SubMatrix makecopy(SubMatrix m)
