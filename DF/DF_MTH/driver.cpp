@@ -41,7 +41,8 @@ int main(int argc, char **argv)
 
     for (j = 0; j < global_heap->size; j++)
     {
-        cout << global_heap->arr[j].word << "\t" << global_heap->arr[j].count << "\n";
+        if (global_heap->arr[j].count != 0)
+            cout << global_heap->arr[j].word << "\t" << global_heap->arr[j].count << "\n";
     }
     printf("Time : %f\n", end - start);
     return 0;
