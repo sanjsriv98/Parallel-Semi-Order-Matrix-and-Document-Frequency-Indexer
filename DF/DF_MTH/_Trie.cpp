@@ -61,190 +61,32 @@ void insert(trieNode root, char *key)
 // lock(key);
 #pragma omp atomic
     pCrawl->count++;
-    // if (pCrawl->isEndOfWord)
-    // {
-    //     // checkindex etc;
-    //     if (pCrawl->index == -1)
-    //     {
-    //         if (pCrawl->count > conf)
-    //         {
-    //             // LOCK
-    //             omp_set_lock(&heaplock);
-    //             if (pCrawl->count > global_heap->arr[0].count)
-    //             {
-    //                 if (global_heap->arr[0].triePtr)
-    //                     global_heap->arr[0].triePtr->index = -1;
-    //                 pCrawl->index = 0;
-    //                 global_heap->arr[0].count = pCrawl->count;
-    //                 global_heap->arr[0].word = key;
-    //                 global_heap->arr[0].triePtr = pCrawl;
-    //                 minHeapify(global_heap, global_heap->size - 1, 0);
-    //             }
-    //             else
-    //             {
-    //                 flag = 1;
-    //             }
-    //             // UNLOCK
-    //             omp_unset_lock(&heaplock);
-    //             conf = global_heap->arr[0].count;
-    //         }
-    //         else
-    //         {
-    //             flag = 1;
-    //         }
-    //     }
-    //     else
-    //     {
-    //         // LOCK
-    //         omp_set_lock(&heaplock);
-    //         int index = pCrawl->index;
-    //         global_heap->arr[index].count++;
-    //         minHeapify(global_heap, global_heap->size - 1, index);
-    //         // UNLOCK
-    //         omp_unset_lock(&heaplock);
-    //         if (index == 0)
-    //         {
-    //             conf = global_heap->arr[0].count;
-    //         }
-    //         flag = 1;
-    //     }
-    // }
-    // else
-    // {
-    //     pCrawl->isEndOfWord = true;
-    //     pCrawl->index = -1;
-    //     if (pCrawl->count > conf)
-    //     {
-    //         // LOCK HEAP
-    //         omp_set_lock(&heaplock);
-    //         if (pCrawl->count > global_heap->arr[0].count)
-    //         {
-    //             if (global_heap->arr[0].triePtr)
-    //                 global_heap->arr[0].triePtr->index = -1;
-    //             pCrawl->index = 0;
-    //             global_heap->arr[0].count = pCrawl->count;
-    //             global_heap->arr[0].word = key;
-    //             global_heap->arr[0].triePtr = pCrawl;
-    //             minHeapify(global_heap, global_heap->size - 1, 0);
-    //         }
-    //         else
-    //         {
-    //             flag = 1;
-    //         }
-    //         // UNLOCK
-    //         omp_unset_lock(&heaplock);
-    //         conf = global_heap->arr[0].count;
-    //     }
-    //     else
-    //     {
-    //         flag = 1;
-    //     }
-    // }
-    // //UNLOCK Letter
-    // unlock(key);
-    // if (flag == 1)
-    // {
     free(key);
-    // }
     return;
 }
 
 void traverse(char *prefix, trieNode node)
 {
-    // if (node->isEndOfWord)
-    //     cout << prefix << '\n';
-    // char *s = (char *)malloc(sizeof(char) * (1 + strlen(prefix)));
-    // strcpy(s, prefix);
     char *s = prefix;
     trieNode pCrawl = node;
     if (pCrawl->isEndOfWord && pCrawl->count > conf && strcmp(s, "") != 0)
     {
-        // checkindex etc;
-        // if (pCrawl->index == -1)
-        //     {
-        // if (pCrawl->count > conf)
-        // {
-
-        // #pragma omp task private(pCrawl, s)
-
         {
             // LOCK
             omp_set_lock(&heaplock);
             if (pCrawl->count > global_heap->arr[0].count)
             {
-                // if (global_heap->arr[0].triePtr)
-                // global_heap->arr[0].triePtr->index = -1;
-                // pCrawl->index = 0;
                 global_heap->arr[0].count = pCrawl->count;
                 cout << s << '\n';
-                // cout << prefix << '\n';
-                // if (!s.empty())
                 global_heap->arr[0].word = s;
                 global_heap->arr[0].triePtr = pCrawl;
                 minHeapify(global_heap, global_heap->size - 1, 0);
             }
-            // else
-            //             {
-            //                 flag = 1;
-            //             }
             // UNLOCK
             omp_unset_lock(&heaplock);
             conf = global_heap->arr[0].count;
         }
     }
-    // else
-    //         {
-    //             flag = 1;
-    //         }
-    //     }
-    //     else
-    //     {
-    //         // LOCK
-    //         omp_set_lock(&heaplock);
-    //         int index = pCrawl->index;
-    //         global_heap->arr[index].count++;
-    //         minHeapify(global_heap, global_heap->size - 1, index);
-    //         // UNLOCK
-    //         omp_unset_lock(&heaplock);
-    //         if (index == 0)
-    //         {
-    //             conf = global_heap->arr[0].count;
-    //         }
-    //         flag = 1;
-    //     }
-    // }
-    // else
-    // {
-    //     pCrawl->isEndOfWord = true;
-    //     pCrawl->index = -1;
-    //     if (pCrawl->count > conf)
-    //     {
-    //         // LOCK HEAP
-    //         omp_set_lock(&heaplock);
-    //         if (pCrawl->count > global_heap->arr[0].count)
-    //         {
-    //             if (global_heap->arr[0].triePtr)
-    //                 global_heap->arr[0].triePtr->index = -1;
-    //             pCrawl->index = 0;
-    //             global_heap->arr[0].count = pCrawl->count;
-    //             global_heap->arr[0].word = key;
-    //             global_heap->arr[0].triePtr = pCrawl;
-    //             minHeapify(global_heap, global_heap->size - 1, 0);
-    //         }
-    //         else
-    //         {
-    //             flag = 1;
-    //         }
-    //         // UNLOCK
-    //         omp_unset_lock(&heaplock);
-    //         conf = global_heap->arr[0].count;
-    //     }
-    //     else
-    //     {
-    //         flag = 1;
-    //     }
-    // }
-
     char index;
     int len = strlen(prefix);
 
@@ -341,21 +183,12 @@ void makestopwords(const char *docName)
 {
     // cout << docName << "\n";
     FILE *entry_file = fopen(docName, "r");
-    // map<string, int> local_dict;
-    // map<string, int>::iterator itr;
     if (entry_file == NULL)
     {
         // cout << docName << "\n";
         fprintf(stderr, "Error : Failed to open entry file\n");
         return;
     }
-    //
-    // {
-    // 	// cout << docName << "\n";
-    // }else
-    // {
-    // 	// cout << docName << "\n";
-    // }
     char *line = NULL, *saveptr1, *str1, *token, *p;
     size_t len = 0;
     ssize_t read;
@@ -368,34 +201,13 @@ void makestopwords(const char *docName)
             token = strtok_r(str1, "  \n\t", &saveptr1);
             if (token == NULL)
                 break;
-            // for (p = token; *p; ++p)
-            //     *p = tolower(*p);
-            // itr = local_dict.find(token);
-
-            // if (itr == local_dict.end())
-            // {
-            // local_dict[token] = 1;
-            // if (strcmp(token, "") == 0)
-            // {
-            // 	cout << "lol" << docName << "\n";
-            // }
             char *temp = (char *)malloc(sizeof(char) * (1 + strlen(token)));
             strcpy(temp, token);
 #pragma omp task
             insert(stoproot, temp);
         }
-        // else
-        // {
-        // 	local_dict[token]++;
-        // }
     }
 
 #pragma omp taskwait
-    // for (itr = local_dict.begin(); itr != local_dict.end(); ++itr)
-    // {
-    // 	cout << itr->first << '\t' << itr->second << '\n';
-    // }
     fclose(entry_file);
-    // local_dict.clear();
-    // free(docName);
 }

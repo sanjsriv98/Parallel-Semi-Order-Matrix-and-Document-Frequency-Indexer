@@ -122,8 +122,14 @@ void fillheap(int k)
                     // free(heap->arr[0].wordName);
                     // }
                     heap->arr[0].count = temp->wc->count;
-                    heap->arr[0].wordName = (char *)malloc(sizeof(char) * (1 + strlen(temp->wc->wordName)));
-                    strcpy(heap->arr[0].wordName, temp->wc->wordName);
+                    if (temp->wc->wordName)
+                    {
+                        heap->arr[0].wordName = (char *)malloc(sizeof(char) * (1 + strlen(temp->wc->wordName)));
+                        strcpy(heap->arr[0].wordName, temp->wc->wordName);
+                    }
+                    else
+                        heap->arr[0].wordName = NULL;
+
                     minHeapify(heap, heap->size, 0);
                 }
                 // UNLOCK

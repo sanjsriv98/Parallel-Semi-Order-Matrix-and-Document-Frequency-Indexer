@@ -132,7 +132,3 @@ void unlock(char *token)
     }
     return;
 }
-
-// void omp_init_lock(omp_lock_t *lock) { return; }
-// void omp_set_lock(omp_lock_t *lock) { return; }
-// void omp_unset_lock(omp_lock_t *lock) { return; }

@@ -1,11 +1,14 @@
 run: exe
-	./exe 10 4
+	./exe
 
 gdb: exe
 	gdb exe
 
-exe: _FTW.o _Hash.o quickSort.o 
-	g++ -o exe _FTW.o _Hash.o quickSort.o -fopenmp
+exe: _FTW.o _Hash.o quickSort.o driver.o 
+	g++ -o exe driver.o _FTW.o _Hash.o quickSort.o -fopenmp
+
+driver.o: driver.cpp _FTW.h
+	g++ -c -g driver.cpp -fopenmp
 
 _FTW.o:_FTW.cpp _FTW.h quickSort.h _Hash.h
 	g++ -c -g _FTW.cpp -fopenmp

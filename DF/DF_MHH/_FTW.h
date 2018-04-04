@@ -7,5 +7,6 @@
 #include "_MinHeap.h"
 
 int fileproc(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf);
+void filetreewalk(const char *root);
 
 extern hashTable ht;

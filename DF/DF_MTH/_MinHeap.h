@@ -36,14 +36,13 @@ typedef struct heaphead
     heapnode *arr;
     int size;
 } heaphead;
-typedef struct countindex
-{
-    int count;
-    int index;
-} countindex;
+// typedef struct countindex
+// {
+//     int count;
+//     int index;
+// } countindex;
 typedef heaphead *HeapHead;
 
-extern map<string, countindex> global_dict;
 extern HeapHead global_heap;
 extern int conf;
 extern trieNode stoproot;

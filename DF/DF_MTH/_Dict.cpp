@@ -1,19 +1,6 @@
 // #include <stdio.h>
 #include "_Dict.h"
 
-// char *isalphabet(char *temp)
-// {
-// 	char *p;
-// 	for (p = temp; *p; ++p)
-// 		if (!isalpha(*p))
-// 			*p = ' ';
-// 		else
-// 		{
-// 			*p = tolower(*p);
-// 		}
-// 	return temp;
-// }
-
 void fill_dict(char *docName)
 {
 	// cout << docName << "\n";
@@ -51,10 +38,6 @@ void fill_dict(char *docName)
 			if (itr == local_dict.end())
 			{
 				local_dict[token] = 1;
-				// if (strcmp(token, "") == 0)
-				// {
-				// 	cout << "lol" << docName << "\n";
-				// }
 				char *temp = (char *)malloc(sizeof(char) * (1 + strlen(token)));
 				strcpy(temp, token);
 #pragma omp task
