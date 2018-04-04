@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
     }
 
     createEmptyHT();
-#pragma omp parallel
+#pragma omp parallel num_threads(nwork)
     {
 #pragma omp single
         {

@@ -12,19 +12,19 @@ omp_lock_t letterlocks[27][26];
 
 int main(int argc, char **argv)
 {
-     if(argc<2)
+    if (argc < 2)
     {
-        cerr << "Usage: "<<argv[0]<< " <num_elements> <num_workers>"<<endl;
+        cerr << "Usage: " << argv[0] << " <num_elements> <num_workers>" << endl;
         // return 0;
         exit(-1);
     }
-    int num_elem=atoi(argv[1]);
-    int nwork=atoi(argv[2]);
+    int num_elem = atoi(argv[1]);
+    int nwork = atoi(argv[2]);
     stoproot = getNode();
     makestopwords("./stopwords");
     double start = omp_get_wtime();
     int i, j, k = num_elem;
-#pragma omp parallel for private(i, j)
+#pragma omp parallel for private(i, j) num_threads(nwork)
     for (i = 0; i < 27; i++)
     {
         for (j = 0; j < 26; j++)
@@ -37,11 +37,11 @@ int main(int argc, char **argv)
     int flags = FTW_DEPTH | FTW_PHYS;
     global_heap = InitialiseHead(k);
 
-#pragma omp parallel
+#pragma omp parallel num_threads(nwork)
 #pragma omp single
     {
-        if (argc == 1)
-            filetreewalk("."); 
+        if (argc == 3)
+            filetreewalk(".");
         else
             filetreewalk(argv[3]);
     }
@@ -93,7 +93,7 @@ void filetreewalk(const char *root)
             rootcopy = (char *)malloc((strlen(root) + 1) * sizeof(char));
             strcpy(rootcopy, root);
             strcpy(inputfile, in_file->d_name);
-#pragma omp task 
+#pragma omp task
             {
                 inputfile = target(rootcopy, inputfile);
                 filetreewalk(inputfile);
