@@ -1,4 +1,6 @@
 #define _XOPEN_SOURCE 500
+#include <stdio.h>
+#include <iostream>
 #include "_FTW.h"
 
 HeapHead global_heap;
@@ -8,11 +10,20 @@ int conf;
 omp_lock_t heaplock;
 omp_lock_t letterlocks[27][26];
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
+     if(argc<2)
+    {
+        cerr << "Usage: "<<argv[0]<< " <num_elements> <num_workers>"<<endl;
+        // return 0;
+        exit(-1);
+    }
+    int num_elem=atoi(argv[1]);
+    int nwork=atoi(argv[2]);
     stoproot = getNode();
+    makestopwords("./stopwords");
     double start = omp_get_wtime();
-    int i, j, k = 100;
+    int i, j, k = num_elem;
 #pragma omp parallel for private(i, j)
     for (i = 0; i < 27; i++)
     {
@@ -25,7 +36,6 @@ int main(int argc, char *argv[])
     root = getNode();
     int flags = FTW_DEPTH | FTW_PHYS;
     global_heap = InitialiseHead(k);
-    makestopwords("./stopwords");
 
 #pragma omp parallel
 #pragma omp single
@@ -33,7 +43,7 @@ int main(int argc, char *argv[])
         if (argc == 1)
             filetreewalk("."); 
         else
-            filetreewalk(argv[1]);
+            filetreewalk(argv[3]);
     }
     printf("TREEWALK COMPLETE %f\n", omp_get_wtime() - start);
     string s;
