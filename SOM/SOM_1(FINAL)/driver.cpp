@@ -1,7 +1,6 @@
 //2015A7PS0102P 2015A7PS0127P
 #include "semiorder.h"
 
-
 //global shared variables
 int answerflg;
 
@@ -29,8 +28,8 @@ int main(int argc, char **argv)
 		}
 	}
 	printf("READING COMPLETE\n");
-	int itr =x;
-	int* key=(int*)malloc(itr*sizeof(int)); // = mat[99][99];
+	int itr = x;
+	int *key = (int *)malloc(itr * sizeof(int)); // = mat[99][99];
 	srand(time(0));
 	int upperbound = x * y;
 	// #pragma omp parallel for
@@ -56,11 +55,13 @@ int main(int argc, char **argv)
 		{
 			for (int j = 0; j < width; j++)
 			{
-				if(answerflg==1) {
+				if (answerflg == 1)
+				{
 #pragma omp cancel for
-				// continue;
+					// continue;
 				}
-				else{
+				else
+				{
 					int fromx = i * size, fromy = j * size, tox = (1 + i) * size - 1, toy = (1 + j) * size - 1;
 					// printf("%d %d %d %d\n", fromx, tox, fromy, toy);
 					if (mat[fromx][fromy] > key[k] || mat[tox][toy] < key[k])
@@ -83,13 +84,13 @@ int main(int argc, char **argv)
 		}
 		if (answerflg == 1)
 		{
-			answerflg=0;
-		// if (key[k] != mat[answer->x][answer->y])
+			answerflg = 0;
+			// if (key[k] != mat[answer->x][answer->y])
 			// printf("%d %d\n",answer->x,answer->y);
 		}
 		else
 		{
-			printf("FAILED %d\n",key[k]);
+			printf("FAILED %d\n", key[k]);
 		}
 		free(answer);
 	}
