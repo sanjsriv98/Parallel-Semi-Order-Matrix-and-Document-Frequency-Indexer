@@ -48,6 +48,7 @@ void insert(trieNode root, char *key)
     for (level = 0; level < length; level++)
     {
         index = CHAR_TO_INDEX(key[level]);
+#pragma omp critical(getnode)
         if (!pCrawl->children[index])
             pCrawl->children[index] = getNode();
 
@@ -57,7 +58,8 @@ void insert(trieNode root, char *key)
     // mark last node as leaf
     //LOCK letter
     pCrawl->isEndOfWord = true;
-    lock(key);
+// lock(key);
+#pragma omp atomic
     pCrawl->count++;
     // if (pCrawl->isEndOfWord)
     // {
@@ -139,7 +141,7 @@ void insert(trieNode root, char *key)
     //     }
     // }
     // //UNLOCK Letter
-    unlock(key);
+    // unlock(key);
     // if (flag == 1)
     // {
     free(key);
@@ -149,8 +151,8 @@ void insert(trieNode root, char *key)
 
 void traverse(char *prefix, trieNode node)
 {
-    if (node->isEndOfWord)
-        cout << prefix << '\n';
+    // if (node->isEndOfWord)
+    //     cout << prefix << '\n';
     // char *s = (char *)malloc(sizeof(char) * (1 + strlen(prefix)));
     // strcpy(s, prefix);
     char *s = prefix;
@@ -269,40 +271,44 @@ void traverse(char *prefix, trieNode node)
 void traverse2(std::string &prefix, trieNode node)
 {
     // if (node->isEndOfWord)
-    //     cout << prefix << '\n';
-    if (node->count > global_heap->arr[0].count)
+    //     cout << prefix << " " << node->count << "\n";
+    if (node->count > conf)
     {
         // LOCK
-        // omp_set_lock(&heaplock);
-        // if (pCrawl->count > global_heap->arr[0].count)
-        // {
-        // if (global_heap->arr[0].triePtr)
-        // global_heap->arr[0].triePtr->index = -1;
-        // pCrawl->index = 0;
-        global_heap->arr[0].count = node->count;
-        global_heap->arr[0].word = prefix;
-        global_heap->arr[0].triePtr = node;
-        minHeapify(global_heap, global_heap->size - 1, 0);
-        // }
-        // else
-        // {
-        // flag = 1;
-        // }
+        omp_set_lock(&heaplock);
+        if (node->count > global_heap->arr[0].count)
+        {
+            // if (global_heap->arr[0].triePtr)
+            // global_heap->arr[0].triePtr->index = -1;
+            // pCrawl->index = 0;
+            global_heap->arr[0].count = node->count;
+            global_heap->arr[0].word = prefix;
+            global_heap->arr[0].triePtr = node;
+            minHeapify(global_heap, global_heap->size - 1, 0);
+            // }
+            // else
+            // {
+            // flag = 1;
+        }
         // UNLOCK
-        // omp_unset_lock(&heaplock);
-        // conf = global_heap->arr[0].count;
+        omp_unset_lock(&heaplock);
+        conf = global_heap->arr[0].count;
     }
-    for (char index = 0; index < ALPHABET_SIZE; ++index)
+#pragma omp for
+    for (char index = 0; index < 26; ++index)
     {
         char next = 'a' + index;
         trieNode pChild = node->children[index];
         if (pChild)
         {
-            prefix.push_back(next);
-            traverse2(prefix, pChild);
-            prefix.pop_back();
+            string temp = prefix;
+            temp.push_back(next);
+            traverse2(temp, pChild);
+            // prefix.pop_back();
         }
+#pragma omp cancel for
     }
+    free(node);
 }
 int search(struct TrieNode *root, const char *key)
 {

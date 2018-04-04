@@ -72,6 +72,11 @@ void fill_dict(char *docName)
 	// 	cout << itr->first << '\t' << itr->second << '\n';
 	// }
 	fclose(entry_file);
+	// for (itr = local_dict.begin(); itr != local_dict.end(); ++itr)
+	// {
+	// 	cout << "key: \"" << itr->first << "\" "
+	// 		 << "value: " << itr->second << "   filename :" << docName << endl;
+	// }
 	local_dict.clear();
 	free(docName);
 }
