@@ -1,0 +1,17 @@
+./exe 10 96 ../../../../shared/20_newsgroups/
+Time: 4.00608
+
+./exe 10 48 ../../../../shared/20_newsgroups/
+Time: 3.67686
+
+./exe 10 64 ../../../../shared/20_newsgroups/
+Time: 3.79504
+
+./exe 10 32 ../../../../shared/20_newsgroups/
+Time: 3.42594
+
+./exe 10 16 ../../../../shared/20_newsgroups/
+Time: 1.25853
+
+./exe 10 8 ../../../../shared/20_newsgroups/
+Time: 1.57484

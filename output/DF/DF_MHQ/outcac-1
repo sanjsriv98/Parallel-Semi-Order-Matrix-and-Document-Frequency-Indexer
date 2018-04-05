@@ -1,17 +1,17 @@
 ./exe 10 96 ../../../../shared/cacm/
-Time: 0.653818
+Time: 0.650613
 
 ./exe 10 48 ../../../../shared/cacm/
-Time: 0.544687
+Time: 0.580295
 
 ./exe 10 64 ../../../../shared/cacm/
-Time: 0.533495
+Time: 0.504973
 
 ./exe 10 32 ../../../../shared/cacm/
-Time: 0.511894
+Time: 0.474254
 
 ./exe 10 16 ../../../../shared/cacm/
-Time: 0.210063
+Time: 0.185125
 
 ./exe 10 8 ../../../../shared/cacm/
-Time: 0.192041
+Time: 0.194795

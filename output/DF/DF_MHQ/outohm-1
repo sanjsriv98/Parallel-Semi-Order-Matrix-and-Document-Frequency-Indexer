@@ -1,17 +1,17 @@
 ./exe 10 96 ../../../../shared/ohsumed-first-20000-docs/
-Time: 4.08865
+Time: 4.28965
 
 ./exe 10 48 ../../../../shared/ohsumed-first-20000-docs/
-Time: 3.96732
+Time: 4.0874
 
 ./exe 10 64 ../../../../shared/ohsumed-first-20000-docs/
-Time: 4.22014
+Time: 4.01732
 
 ./exe 10 32 ../../../../shared/ohsumed-first-20000-docs/
-Time: 3.81456
+Time: 3.97287
 
 ./exe 10 16 ../../../../shared/ohsumed-first-20000-docs/
-Time: 1.13388
+Time: 1.26986
 
 ./exe 10 8 ../../../../shared/ohsumed-first-20000-docs/
-Time: 1.51675
+Time: 1.75306

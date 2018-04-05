@@ -1,17 +1,17 @@
 ./exe 10 96 ../../../../shared/bbc-fulltext/
-Time: 0.550534
+Time: 0.547004
 
 ./exe 10 48 ../../../../shared/bbc-fulltext/
-Time: 0.509022
+Time: 0.45788
 
 ./exe 10 64 ../../../../shared/bbc-fulltext/
-Time: 0.481189
+Time: 0.43653
 
 ./exe 10 32 ../../../../shared/bbc-fulltext/
-Time: 0.477366
+Time: 0.226148
 
 ./exe 10 16 ../../../../shared/bbc-fulltext/
-Time: 0.22189
+Time: 0.223594
 
 ./exe 10 8 ../../../../shared/bbc-fulltext/
-Time: 0.349256
+Time: 0.382584

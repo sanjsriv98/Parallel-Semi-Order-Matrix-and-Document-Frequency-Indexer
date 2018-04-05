@@ -1,0 +1,17 @@
+./exe 10 96 /home/parcom/shared
+Time: 33.301
+
+./exe 10 64 /home/parcom/shared
+Time: 30.4072
+
+./exe 10 48 /home/parcom/shared
+Time: 19.803
+
+./exe 10 32 /home/parcom/shared
+Time: 15.8165
+
+./exe 10 16 /home/parcom/shared
+Time: 18.4174
+
+./exe 10 8 /home/parcom/shared
+Time: 32.8408

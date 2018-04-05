@@ -1,17 +1,17 @@
 ./exe 10 96 ../../../../shared/simple/
-Time: 24.7953
+Time: 24.8384
 
 ./exe 10 48 ../../../../shared/simple/
-Time: 11.1695
+Time: 12.1382
 
 ./exe 10 64 ../../../../shared/simple/
-Time: 23.949
+Time: 24.8549
 
 ./exe 10 32 ../../../../shared/simple/
-Time: 11.3108
+Time: 9.78808
 
 ./exe 10 16 ../../../../shared/simple/
-Time: 14.8399
+Time: 14.8819
 
 ./exe 10 8 ../../../../shared/simple/
-Time: 30.9417
+Time: 30.415
