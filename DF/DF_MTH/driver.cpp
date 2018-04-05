@@ -34,7 +34,9 @@ int main(int argc, char **argv)
             filetreewalk(argv[3]);
     }
     printf("TREEWALK COMPLETE %f\n", omp_get_wtime() - start);
-    string s;
+    char* s = (char*)calloc(1,sizeof(char));
+    // strcpy(s,"\0");
+    conf = 0;
     traverse2(s, root);
     heapSort(global_heap);
     double end = omp_get_wtime();

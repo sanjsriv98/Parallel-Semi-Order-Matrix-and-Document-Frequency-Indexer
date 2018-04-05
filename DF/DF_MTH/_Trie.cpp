@@ -110,7 +110,7 @@ void traverse(char *prefix, trieNode node)
     // free(prefix);
 }
 
-void traverse2(std::string &prefix, trieNode node)
+void traverse2(char* prefix, trieNode node)
 {
     // if (node->isEndOfWord)
     //     cout << prefix << " " << node->count << "\n";
@@ -124,7 +124,12 @@ void traverse2(std::string &prefix, trieNode node)
             // global_heap->arr[0].triePtr->index = -1;
             // pCrawl->index = 0;
             global_heap->arr[0].count = node->count;
-            global_heap->arr[0].word = prefix;
+            if(!global_heap->arr[0].word){
+                free(global_heap->arr[0].word);
+            }
+                global_heap->arr[0].word = (char*)malloc(sizeof(char)*(1+strlen(prefix)));
+            
+            strcpy(global_heap->arr[0].word, prefix);
             global_heap->arr[0].triePtr = node;
             minHeapify(global_heap, global_heap->size - 1, 0);
             // }
@@ -144,13 +149,18 @@ void traverse2(std::string &prefix, trieNode node)
         trieNode pChild = node->children[index];
         if (pChild)
         {
-            string temp = prefix;
-            temp.push_back(next);
+            char* temp = (char*)malloc(sizeof(char)*(2+strlen(prefix)));
+            strcpy(temp,prefix);
+            temp[strlen(prefix)]=next;
+            temp[strlen(prefix)+1]='\0';
+            // strcat(temp,next);
+            // temp.push_back(next);
             traverse2(temp, pChild);
             // prefix.pop_back();
         }
         // #pragma omp cancel for
     }
+    free(prefix);
     free(node);
 }
 int search(struct TrieNode *root, const char *key)
