@@ -1,0 +1,78 @@
+./exe 10 96 ../../../../shared/bbc-fulltext/
+TREEWALK COMPLETE 0.488923
+year	1190
+time	825
+people	797
+mr	790
+years	671
+world	668
+made	651
+make	636
+told	617
+back	586
+Time: 0.547004
+./exe 10 48 ../../../../shared/bbc-fulltext/
+TREEWALK COMPLETE 0.404179
+year	1190
+time	825
+people	797
+mr	790
+years	671
+world	668
+made	651
+make	636
+told	617
+back	586
+Time: 0.45788
+./exe 10 64 ../../../../shared/bbc-fulltext/
+TREEWALK COMPLETE 0.387134
+year	1190
+time	825
+people	797
+mr	790
+years	671
+world	668
+made	651
+make	636
+told	617
+back	586
+Time: 0.43653
+./exe 10 32 ../../../../shared/bbc-fulltext/
+TREEWALK COMPLETE 0.170589
+year	1190
+time	825
+people	797
+mr	790
+years	671
+world	668
+made	651
+make	636
+told	617
+back	586
+Time: 0.226148
+./exe 10 16 ../../../../shared/bbc-fulltext/
+TREEWALK COMPLETE 0.170561
+year	1190
+time	825
+people	797
+mr	790
+years	671
+world	668
+made	651
+make	636
+told	617
+back	586
+Time: 0.223594
+./exe 10 8 ../../../../shared/bbc-fulltext/
+TREEWALK COMPLETE 0.322445
+year	1190
+time	825
+people	797
+mr	790
+years	671
+world	668
+made	651
+make	636
+told	617
+back	586
+Time: 0.382584

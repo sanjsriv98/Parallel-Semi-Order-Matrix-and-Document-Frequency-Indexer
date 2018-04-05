@@ -1,0 +1,78 @@
+./exe 10 96 ../../../shared/ohsumed-first-20000-docs
+TREEWALK COMPLETE 13.142055
+patients	12873
+study	5993
+disease	5492
+treatment	5413
+results	5219
+patient	5136
+clinical	4822
+significant	4031
+cases	3927
+compared	3837
+Time : 13.206700
+./exe 10 48 ../../../shared/ohsumed-first-20000-docs
+TREEWALK COMPLETE 10.917328
+patients	12873
+study	5993
+disease	5492
+treatment	5413
+results	5219
+patient	5136
+clinical	4822
+significant	4031
+cases	3927
+compared	3837
+Time : 10.981839
+./exe 10 64 ../../../shared/ohsumed-first-20000-docs
+TREEWALK COMPLETE 12.533416
+patients	12873
+study	5993
+disease	5492
+treatment	5413
+results	5219
+patient	5136
+clinical	4822
+significant	4031
+cases	3927
+compared	3837
+Time : 12.598811
+./exe 10 32 ../../../shared/ohsumed-first-20000-docs
+TREEWALK COMPLETE 9.739676
+patients	12873
+study	5993
+disease	5492
+treatment	5413
+results	5219
+patient	5136
+clinical	4822
+significant	4031
+cases	3927
+compared	3837
+Time : 9.812211
+./exe 10 16 ../../../shared/ohsumed-first-20000-docs
+TREEWALK COMPLETE 5.781182
+patients	12873
+study	5993
+disease	5492
+treatment	5413
+results	5219
+patient	5136
+clinical	4822
+significant	4031
+cases	3927
+compared	3837
+Time : 5.849361
+./exe 10 8 ../../../shared/ohsumed-first-20000-docs
+TREEWALK COMPLETE 2.508301
+patients	12873
+study	5993
+disease	5492
+treatment	5413
+results	5219
+patient	5136
+clinical	4822
+significant	4031
+cases	3927
+compared	3837
+Time : 2.605981

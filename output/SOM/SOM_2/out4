@@ -1,0 +1,36 @@
+./exe 1 < ../input4
+READING COMPLETE
+Time : 3.808176
+
+./exe 2 < ../input4
+READING COMPLETE
+Time : 4.246335
+
+./exe 4 < ../input4
+READING COMPLETE
+Time : 3.874734
+
+./exe 8 < ../input4
+READING COMPLETE
+Time : 5.250328
+
+./exe 16 < ../input4
+READING COMPLETE
+Time : 6.974002
+
+./exe 32 < ../input4
+READING COMPLETE
+Time : 10.086922
+
+./exe 48 < ../input4
+READING COMPLETE
+Time : 13.258438
+
+./exe 64 < ../input4
+READING COMPLETE
+Time : 14.364220
+
+./exe 96 < ../input4
+READING COMPLETE
+Time : 34.331200
+

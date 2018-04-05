@@ -1,0 +1,146 @@
+g++ -c -g driver.cpp -fopenmp
+g++ -o exe -g driver.o -fopenmp
+./exe 1 < ../input1
+READING COMPLETE
+Time : 0.000070
+
+./exe 2 < ../input1
+READING COMPLETE
+Time : 0.000389
+
+./exe 4 < ../input1
+READING COMPLETE
+Time : 0.000742
+
+./exe 8 < ../input1
+READING COMPLETE
+Time : 0.001124
+
+./exe 16 < ../input1
+READING COMPLETE
+Time : 0.001926
+
+./exe 32 < ../input1
+READING COMPLETE
+Time : 0.003503
+
+./exe 48 < ../input1
+READING COMPLETE
+Time : 0.003949
+
+./exe 64 < ../input1
+READING COMPLETE
+Time : 0.007961
+
+./exe 96 < ../input1
+READING COMPLETE
+Time : 0.124995
+
+./exe 1 < ../input2
+READING COMPLETE
+Time : 0.000760
+
+./exe 2 < ../input2
+READING COMPLETE
+Time : 0.005742
+
+./exe 4 < ../input2
+READING COMPLETE
+Time : 0.009171
+
+./exe 8 < ../input2
+READING COMPLETE
+Time : 0.014899
+
+./exe 16 < ../input2
+READING COMPLETE
+Time : 0.021029
+
+./exe 32 < ../input2
+READING COMPLETE
+Time : 0.038206
+
+./exe 48 < ../input2
+READING COMPLETE
+Time : 0.056130
+
+./exe 64 < ../input2
+READING COMPLETE
+Time : 0.062460
+
+./exe 96 < ../input2
+READING COMPLETE
+Time : 1.004290
+
+./exe 1 < ../input3
+READING COMPLETE
+Time : 0.017823
+
+./exe 2 < ../input3
+READING COMPLETE
+Time : 0.126310
+
+./exe 4 < ../input3
+READING COMPLETE
+Time : 0.191699
+
+./exe 8 < ../input3
+READING COMPLETE
+Time : 0.265277
+
+./exe 16 < ../input3
+READING COMPLETE
+Time : 0.396447
+
+./exe 32 < ../input3
+READING COMPLETE
+Time : 0.602779
+
+./exe 48 < ../input3
+READING COMPLETE
+Time : 0.777875
+
+./exe 64 < ../input3
+READING COMPLETE
+Time : 0.831918
+
+./exe 96 < ../input3
+READING COMPLETE
+Time : 8.460926
+
+./exe 1 < ../input4
+READING COMPLETE
+Time : 3.573615
+
+./exe 2 < ../input4
+READING COMPLETE
+Time : 4.301341
+
+./exe 4 < ../input4
+READING COMPLETE
+Time : 4.163883
+
+./exe 8 < ../input4
+READING COMPLETE
+Time : 5.534113
+
+./exe 16 < ../input4
+READING COMPLETE
+Time : 7.130868
+
+./exe 32 < ../input4
+READING COMPLETE
+Time : 10.448341
+
+./exe 48 < ../input4
+READING COMPLETE
+Time : 13.428715
+
+./exe 64 < ../input4
+READING COMPLETE
+Time : 14.153459
+
+./exe 96 < ../input4
+READING COMPLETE
+Time : 42.168980
+

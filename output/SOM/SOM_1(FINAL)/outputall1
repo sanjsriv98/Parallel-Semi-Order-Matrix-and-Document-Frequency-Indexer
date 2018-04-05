@@ -1,0 +1,144 @@
+./exe 1 < ../input1
+READING COMPLETE
+Time : 0.000053
+
+./exe 2 < ../input1
+READING COMPLETE
+Time : 0.000367
+
+./exe 4 < ../input1
+READING COMPLETE
+Time : 0.000761
+
+./exe 8 < ../input1
+READING COMPLETE
+Time : 0.001278
+
+./exe 16 < ../input1
+READING COMPLETE
+Time : 0.001991
+
+./exe 32 < ../input1
+READING COMPLETE
+Time : 0.004138
+
+./exe 48 < ../input1
+READING COMPLETE
+Time : 0.009327
+
+./exe 64 < ../input1
+READING COMPLETE
+Time : 0.007552
+
+./exe 96 < ../input1
+READING COMPLETE
+Time : 0.120652
+
+./exe 1 < ../input2
+READING COMPLETE
+Time : 0.000504
+
+./exe 2 < ../input2
+READING COMPLETE
+Time : 0.001581
+
+./exe 4 < ../input2
+READING COMPLETE
+Time : 0.002421
+
+./exe 8 < ../input2
+READING COMPLETE
+Time : 0.003662
+
+./exe 16 < ../input2
+READING COMPLETE
+Time : 0.006066
+
+./exe 32 < ../input2
+READING COMPLETE
+Time : 0.010140
+
+./exe 48 < ../input2
+READING COMPLETE
+Time : 0.013904
+
+./exe 64 < ../input2
+READING COMPLETE
+Time : 0.018077
+
+./exe 96 < ../input2
+READING COMPLETE
+Time : 0.704636
+
+./exe 1 < ../input3
+READING COMPLETE
+Time : 0.014742
+
+./exe 2 < ../input3
+READING COMPLETE
+Time : 0.024402
+
+./exe 4 < ../input3
+READING COMPLETE
+Time : 0.030204
+
+./exe 8 < ../input3
+READING COMPLETE
+Time : 0.038752
+
+./exe 16 < ../input3
+READING COMPLETE
+Time : 0.046629
+
+./exe 32 < ../input3
+READING COMPLETE
+Time : 0.065193
+
+./exe 48 < ../input3
+READING COMPLETE
+Time : 0.079517
+
+./exe 64 < ../input3
+READING COMPLETE
+Time : 0.090393
+
+./exe 96 < ../input3
+READING COMPLETE
+Time : 3.744443
+
+./exe 1 < ../input4
+READING COMPLETE
+Time : 4.290035
+
+./exe 2 < ../input4
+READING COMPLETE
+Time : 2.411716
+
+./exe 4 < ../input4
+READING COMPLETE
+Time : 1.331743
+
+./exe 8 < ../input4
+READING COMPLETE
+Time : 1.023360
+
+./exe 16 < ../input4
+READING COMPLETE
+Time : 0.969688
+
+./exe 32 < ../input4
+READING COMPLETE
+Time : 1.057353
+
+./exe 48 < ../input4
+READING COMPLETE
+Time : 1.221308
+
+./exe 64 < ../input4
+READING COMPLETE
+Time : 1.439420
+
+./exe 96 < ../input4
+READING COMPLETE
+Time : 14.246649
+

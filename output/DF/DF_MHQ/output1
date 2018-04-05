@@ -1,0 +1,26 @@
+./exe 10 96 /home/parcom/shared
+TREEWALK COMPLETE 33.454648
+html	113082
+type	112667
+public	111403
+body	111392
+head	111182
+org	110808
+content	110540
+text	110510
+articles	110164
+en	109987
+Time: 33.6838
+./exe 10 48 /home/parcom/shared
+TREEWALK COMPLETE 20.808259
+html	113082
+type	112667
+public	111403
+body	111392
+head	111181
+org	110808
+content	110540
+text	110510
+articles	110164
+en	109986
+Time: 21.0424

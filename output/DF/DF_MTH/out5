@@ -1,0 +1,27 @@
+./exe 10 96 ../../../shared/simple
+TREEWALK COMPLETE 228.625164
+text	109860
+content	109854
+tr	109854
+body	109853
+http	109848
+org	109847
+type	109847
+html	109846
+href	109845
+url	109845
+Time : 229.563057
+./exe 10 48 ../../../shared/simple
+TREEWALK COMPLETE 199.483316
+text	109860
+content	109854
+tr	109854
+body	109853
+http	109848
+org	109847
+type	109847
+html	109846
+href	109845
+url	109845
+Time : 200.313737
+./exe 10 64 ../../../shared/simple

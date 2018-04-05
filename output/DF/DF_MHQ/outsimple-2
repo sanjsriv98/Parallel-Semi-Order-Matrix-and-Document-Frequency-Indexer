@@ -1,0 +1,78 @@
+./exe 10 96 ../../../../shared/simple/
+TREEWALK COMPLETE 24.601098
+text	109859
+content	109853
+tr	109853
+body	109852
+http	109848
+type	109846
+org	109846
+html	109845
+href	109844
+url	109844
+Time: 24.7953
+./exe 10 48 ../../../../shared/simple/
+TREEWALK COMPLETE 10.978179
+text	109859
+tr	109854
+content	109854
+body	109853
+http	109848
+org	109847
+type	109846
+html	109845
+href	109844
+url	109844
+Time: 11.1695
+./exe 10 64 ../../../../shared/simple/
+TREEWALK COMPLETE 23.761910
+text	109859
+tr	109853
+content	109853
+body	109852
+http	109848
+type	109846
+org	109846
+html	109845
+url	109844
+href	109844
+Time: 23.949
+./exe 10 32 ../../../../shared/simple/
+TREEWALK COMPLETE 11.178592
+text	109859
+content	109854
+tr	109853
+body	109852
+http	109848
+org	109847
+type	109846
+html	109845
+href	109844
+url	109844
+Time: 11.3108
+./exe 10 16 ../../../../shared/simple/
+TREEWALK COMPLETE 14.684643
+text	109859
+content	109854
+tr	109853
+body	109853
+http	109848
+org	109846
+type	109846
+html	109845
+href	109844
+url	109844
+Time: 14.8399
+./exe 10 8 ../../../../shared/simple/
+TREEWALK COMPLETE 30.719763
+text	109859
+content	109854
+tr	109853
+body	109852
+http	109848
+org	109847
+type	109846
+html	109845
+url	109844
+href	109844
+Time: 30.9417

@@ -1,0 +1,78 @@
+./exe 10 96 ../../../../shared/cacm/
+TREEWALK COMPLETE 0.622321
+ca	3204
+pre	3204
+html	3204
+cacm	3203
+jb	3021
+pm	2216
+march	1690
+algorithm	1205
+february	949
+january	886
+Time: 0.653818
+./exe 10 48 ../../../../shared/cacm/
+TREEWALK COMPLETE 0.506430
+ca	3204
+pre	3204
+html	3204
+cacm	3203
+jb	3021
+pm	2216
+march	1690
+algorithm	1205
+february	949
+january	886
+Time: 0.544687
+./exe 10 64 ../../../../shared/cacm/
+TREEWALK COMPLETE 0.496501
+ca	3204
+pre	3204
+html	3204
+cacm	3203
+jb	3021
+pm	2216
+march	1690
+algorithm	1205
+february	949
+january	886
+Time: 0.533495
+./exe 10 32 ../../../../shared/cacm/
+TREEWALK COMPLETE 0.469024
+pre	3204
+html	3204
+ca	3204
+cacm	3203
+jb	3021
+pm	2216
+march	1690
+algorithm	1205
+february	949
+january	886
+Time: 0.511894
+./exe 10 16 ../../../../shared/cacm/
+TREEWALK COMPLETE 0.163118
+ca	3204
+html	3204
+pre	3204
+cacm	3203
+jb	3021
+pm	2216
+march	1690
+algorithm	1205
+february	949
+january	886
+Time: 0.210063
+./exe 10 8 ../../../../shared/cacm/
+TREEWALK COMPLETE 0.159977
+pre	3204
+html	3204
+ca	3204
+cacm	3203
+jb	3021
+pm	2216
+march	1690
+algorithm	1205
+february	949
+january	886
+Time: 0.192041
