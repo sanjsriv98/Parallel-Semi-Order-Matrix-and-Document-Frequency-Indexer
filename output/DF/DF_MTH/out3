@@ -1,78 +1,17 @@
 ./exe 10 96 ../../../shared/bbc-fulltext/
-TREEWALK COMPLETE 2.652442
-year	1190
-time	826
-people	798
-mr	790
-years	671
-world	668
-made	651
-make	637
-told	617
-back	586
 Time : 2.686088
+
 ./exe 10 48 ../../../shared/bbc-fulltext/
-TREEWALK COMPLETE 2.056815
-year	1190
-time	826
-people	798
-mr	790
-years	671
-world	668
-made	651
-make	637
-told	617
-back	586
 Time : 2.090666
+
 ./exe 10 64 ../../../shared/bbc-fulltext/
-TREEWALK COMPLETE 2.223798
-year	1190
-time	826
-people	798
-mr	790
-years	671
-world	668
-made	651
-make	637
-told	617
-back	586
 Time : 2.255852
+
 ./exe 10 32 ../../../shared/bbc-fulltext/
-TREEWALK COMPLETE 1.706393
-year	1190
-time	826
-people	798
-mr	790
-years	671
-world	668
-made	651
-make	637
-told	617
-back	586
 Time : 1.737754
+
 ./exe 10 16 ../../../shared/bbc-fulltext/
-TREEWALK COMPLETE 1.031216
-year	1190
-time	826
-people	798
-mr	790
-years	671
-world	668
-made	651
-make	637
-told	617
-back	586
 Time : 1.063604
+
 ./exe 10 8 ../../../shared/bbc-fulltext/
-TREEWALK COMPLETE 0.472998
-year	1190
-time	826
-people	798
-mr	790
-years	671
-world	668
-made	651
-make	637
-told	617
-back	586
 Time : 0.524848
