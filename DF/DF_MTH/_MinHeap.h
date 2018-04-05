@@ -26,7 +26,7 @@ using namespace std;
 using namespace std;
 typedef struct heapnode
 {
-    string word;
+    char *word;
     trieNode triePtr;
     int count;
 } heapnode;
