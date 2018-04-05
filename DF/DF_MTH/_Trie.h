@@ -31,7 +31,7 @@ char *isalphabet(char *temp);
 trieNode getNode(void);
 void insert(trieNode root, char *key);
 void traverse(char *prefix, trieNode node);
-void traverse2(std::string &prefix, trieNode node);
+void traverse2(char* prefix, trieNode node);
 int search(trieNode root, const char *key);
 void makestopwords(const char *docName);
 

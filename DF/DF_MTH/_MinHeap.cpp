@@ -45,41 +45,53 @@ void swap(HeapHead heap, int a, int b)
         // heap->arr[a].triePtr->index = b;
         temp.triePtr = heap->arr[a].triePtr;
         temp.count = heap->arr[a].count;
-        temp.word = heap->arr[a].word;
+        temp.word = heap->arr[a].word;//(char*)malloc(sizeof(char)*(1+strlen(heap->arr[a].word)));
+        // strcpy(temp.word ,heap->arr[a].word);
     }
     else
     {
         temp.triePtr = NULL;
         temp.count = 0;
-        if (!temp.word.empty())
-            temp.word.clear();
+        temp.word=NULL;
+
+        // strcpy(temp.word,"");
+        // if (temp.word)
+        //     free(temp.word);
     }
     if (heap->arr[b].triePtr)
     {
         // heap->arr[b].triePtr->index = a;
         heap->arr[a].triePtr = heap->arr[b].triePtr;
         heap->arr[a].count = heap->arr[b].count;
-        heap->arr[a].word = heap->arr[b].word;
+        // if(!heap->arr[a].word)
+            heap->arr[a].word = heap->arr[b].word;//(char*)malloc((1+strlen(heap->arr[b].word))*sizeof(char));
+        // strcpy(heap->arr[a].word, heap->arr[b].word);
     }
     else
     {
         heap->arr[a].triePtr = NULL;
         heap->arr[a].count = 0;
-        if (!heap->arr[a].word.empty())
-            heap->arr[a].word.clear();
+        heap->arr[a].word=NULL;
+        // strcpy(heap->arr[a].word,"");
+        // if (heap->arr[a].word)
+        //     free(heap->arr[a].word);
     }
     if (temp.triePtr)
     {
         heap->arr[b].triePtr = temp.triePtr;
         heap->arr[b].count = temp.count;
+        //  if(!heap->arr[b].word)
+            // heap->arr[b].word = (char*)malloc((1+strlen(temp.word))*sizeof(char));
+        // strcpy(heap->arr[b].word, temp.word);
         heap->arr[b].word = temp.word;
     }
     else
     {
         heap->arr[b].triePtr = NULL;
         heap->arr[b].count = 0;
-        if (!heap->arr[b].word.empty())
-            heap->arr[b].word.clear();
+        // strcpy(heap->arr[b].word,"");
+        heap->arr[b].word=NULL;
+        //     free(heap->arr[b].word);
     }
 }
 
