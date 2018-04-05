@@ -1,78 +1,17 @@
 ./exe 10 96 ../../../shared/20_newsgroups
-TREEWALK COMPLETE 13.395662
-writes	10854
-article	9366
-people	4703
-time	4312
-apr	4265
-good	3821
-make	3579
-work	2646
-back	2493
-find	2407
 Time : 13.534821
+
 ./exe 10 48 ../../../shared/20_newsgroups
-TREEWALK COMPLETE 10.638176
-writes	10854
-article	9366
-people	4703
-time	4312
-apr	4265
-good	3821
-make	3579
-work	2646
-back	2493
-find	2407
 Time : 10.756771
+
 ./exe 10 64 ../../../shared/20_newsgroups
-TREEWALK COMPLETE 12.502653
-writes	10854
-article	9366
-people	4703
-time	4312
-apr	4265
-good	3821
-make	3579
-work	2646
-back	2493
-find	2407
 Time : 12.638248
+
 ./exe 10 32 ../../../shared/20_newsgroups
-TREEWALK COMPLETE 9.261394
-writes	10854
-article	9366
-people	4703
-time	4312
-apr	4265
-good	3821
-make	3579
-work	2646
-back	2493
-find	2407
 Time : 9.405738
+
 ./exe 10 16 ../../../shared/20_newsgroups
-TREEWALK COMPLETE 5.548495
-writes	10854
-article	9366
-people	4703
-time	4312
-apr	4265
-good	3821
-make	3579
-work	2646
-back	2493
-find	2407
 Time : 5.668757
+
 ./exe 10 8 ../../../shared/20_newsgroups
-TREEWALK COMPLETE 2.346294
-writes	10854
-article	9366
-people	4703
-time	4312
-apr	4265
-good	3821
-make	3579
-work	2646
-back	2493
-find	2407
 Time : 2.467958
